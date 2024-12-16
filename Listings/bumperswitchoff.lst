@@ -1,0 +1,452 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;; RK - Evalbot (Cortex M3 de Texas Instrument)
+    2 00000000         ;; Les deux LEDs sont initialement allumées
+    3 00000000         ;; Ce programme lis l'état du bouton poussoir 1 connecté
+                       e au port GPIOD broche 6
+    4 00000000         ;; Si bouton poussoir fermé ==> fait clignoter les deux 
+                       LED1&2 connectée au port GPIOF broches 4&5.
+    5 00000000         
+    6 00000000                 AREA             |.text|, CODE, READONLY
+    7 00000000         
+    8 00000000         ; This register controls the clock gating logic in norma
+                       l Run mode
+    9 00000000 400FE108 
+                       SYSCTL_PERIPH_GPIO
+                               EQU              0x400FE108  ; SYSCTL_RCGC2_R (p
+                                                            291 datasheet de lm
+                                                            3s9b92.pdf)
+   10 00000000         
+   11 00000000         ; The GPIODATA register is the data register
+   12 00000000 40025000 
+                       GPIO_PORTF_BASE
+                               EQU              0x40025000  ; GPIO Port F (APB)
+                                                             base: 0x4002.5000 
+                                                            (p416 datasheet de 
+                                                            lm3s9B92.pdf)
+   13 00000000         
+   14 00000000         ; The GPIODATA register is the data register
+   15 00000000 40024000 
+                       GPIO_PORTE_BASE
+                               EQU              0x40024000  ; GPIO Port E (APB)
+                                                             base: 0x4002.4000
+   16 00000000         
+   17 00000000         ; configure the corresponding pin to be an output
+   18 00000000         ; all GPIO pins are inputs by default
+   19 00000000 00000400 
+                       GPIO_O_DIR
+                               EQU              0x00000400  ; GPIO Direction (p
+                                                            417 datasheet de lm
+                                                            3s9B92.pdf)
+   20 00000000         
+   21 00000000         ; The GPIODR2R register is the 2-mA drive control regist
+                       er
+   22 00000000         ; By default, all GPIO pins have 2-mA drive.
+   23 00000000 00000500 
+                       GPIO_O_DR2R
+                               EQU              0x00000500  ; GPIO 2-mA Drive S
+                                                            elect (p428 datashe
+                                                            et de lm3s9B92.pdf)
+                                                            
+   24 00000000         
+   25 00000000         ; Digital enable register
+   26 00000000         ; To use the pin as a digital input or output, the corre
+                       sponding GPIODEN bit must be set.
+   27 00000000 0000051C 
+                       GPIO_O_DEN
+                               EQU              0x0000051C  ; GPIO Digital Enab
+                                                            le (p437 datasheet 
+                                                            de lm3s9B92.pdf)
+   28 00000000         
+   29 00000000         ; Pul_up
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   30 00000000 00000510 
+                       GPIO_I_PUR
+                               EQU              0x00000510  ; GPIO Pull-Up (p43
+                                                            2 datasheet de lm3s
+                                                            9B92.pdf)
+   31 00000000         
+   32 00000000         ; Broches select
+   33 00000000 00000010 
+                       BROCHE_4
+                               EQU              0x10        ; led1
+   34 00000000 00000020 
+                       BROCHE_5
+                               EQU              0x20        ; led2 
+   35 00000000 00000030 
+                       BROCHE4_5
+                               EQU              0x30        ; led1 & led2 sur b
+                                                            roche 4 et 5 0b0011
+                                                            0000
+   36 00000000         
+   37 00000000 00000001 
+                       BROCHE0 EQU              0x1         ; bumper_R
+   38 00000000 00000002 
+                       BROCHE1 EQU              0x2         ; bumper_L
+   39 00000000 00000003 
+                       BROCHE0_1
+                               EQU              0x3         ; bumperR_L
+   40 00000000         
+   41 00000000         
+   42 00000000         
+   43 00000000                 ENTRY
+   44 00000000                 EXPORT           __main
+   45 00000000         __main
+   46 00000000         
+   47 00000000         ; ;; Enable the Port F & D peripheral clock   (p291 data
+                       sheet de lm3s9B96.pdf)
+   48 00000000         ; ;;         
+   49 00000000 4E19            ldr              r6, = SYSCTL_PERIPH_GPIO 
+                                                            ;; RCGC2
+   50 00000002 F04F 0030       mov              r0, #0x00000030 ;; Enable clock
+                                                             sur GPIO E et F où
+                                                             sont branchés les 
+                                                            leds (0x28 == 0b110
+                                                            000)
+   51 00000006         ; ;;                              (GPIO::FEDCBA)
+   52 00000006 6030            str              r0, [r6]
+   53 00000008         
+   54 00000008         ; ;; "There must be a delay of 3 system clocks before an
+                       y GPIO reg. access  (p413 datasheet de lm3s9B92.pdf)
+   55 00000008 BF00            nop                          ;; tres tres import
+                                                            ant....
+   56 0000000A BF00            nop
+   57 0000000C BF00            nop                          ;; pas necessaire e
+                                                            n simu ou en debbug
+                                                             step by step...
+   58 0000000E         
+   59 0000000E         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION LED
+   60 0000000E         
+   61 0000000E 4E17            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DI
+R 
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+                                                            ;; 1 Pin du portF e
+                                                            n sortie (broche 4 
+                                                            : 00010000)
+   62 00000010 F04F 0030       ldr              r0, = BROCHE4_5
+   63 00000014 6030            str              r0, [r6]
+   64 00000016         
+   65 00000016 4E16            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DE
+N 
+                                                            ;; Enable Digital F
+                                                            unction 
+   66 00000018 F04F 0030       ldr              r0, = BROCHE4_5
+   67 0000001C 6030            str              r0, [r6]
+   68 0000001E         
+   69 0000001E 4E15            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DR
+2R 
+                                                            ;; Choix de l'inten
+                                                            sité de sortie (2mA
+                                                            )
+   70 00000020 F04F 0030       ldr              r0, = BROCHE4_5
+   71 00000024 6030            str              r0, [r6]
+   72 00000026         
+   73 00000026 F04F 0200       mov              r2, #0x000  ;; pour eteindre LE
+                                                            D
+   74 0000002A         
+   75 0000002A         ; allumer la led broche 4 (BROCHE4_5)
+   76 0000002A F04F 0330       mov              r3, #BROCHE4_5 ;; Allume LED1&2
+                                                             portF broche 4&5 :
+                                                             00110000
+   77 0000002E         
+   78 0000002E 4E12            ldr              r6, = GPIO_PORTF_BASE + (BROCHE
+4_5<<2) 
+                                                            ;; pour allumer les
+                                                             deux leds 
+   79 00000030         ;vvvvvvvvvvvvvvvvvvvvvvvFin configuration LED 
+   80 00000030         
+   81 00000030         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION LED1   
+   82 00000030         
+   83 00000030 4C12            ldr              r4, = GPIO_PORTF_BASE + (BROCHE
+_4<<2) 
+                                                            ;; pour allumer la 
+                                                            led4
+   84 00000032         ;vvvvvvvvvvvvvvvvvvvvvvvFin configuration LED 
+   85 00000032         
+   86 00000032         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION LED2
+   87 00000032         
+   88 00000032 4D13            ldr              r5, = GPIO_PORTF_BASE + (BROCHE
+_5<<2) 
+                                                            ;; 
+   89 00000034         ;vvvvvvvvvvvvvvvvvvvvvvvFin configuration LED
+   90 00000034         
+   91 00000034         
+   92 00000034         
+   93 00000034         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Bumper0_1
+   94 00000034         
+   95 00000034 4F13            ldr              r7, = GPIO_PORTE_BASE+GPIO_I_PU
+R 
+                                                            ;; Pul_up 
+   96 00000036 F04F 0003       ldr              r0, = BROCHE0_1
+   97 0000003A 6038            str              r0, [r7]
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+   98 0000003C         
+   99 0000003C 4F12            ldr              r7, = GPIO_PORTE_BASE+GPIO_O_DE
+N 
+                                                            ;; Enable Digital F
+                                                            unction 
+  100 0000003E F04F 0003       ldr              r0, = BROCHE0_1
+  101 00000042 6038            str              r0, [r7]
+  102 00000044         
+  103 00000044         
+  104 00000044 4F11            ldr              r7, = GPIO_PORTE_BASE + (BROCHE
+0<<2) 
+                                                            ;; @data Register =
+                                                             @base + (mask<<2) 
+                                                            ==> Switcher
+  105 00000046         
+  106 00000046 F8DF 8048       ldr              r8, = GPIO_PORTE_BASE + (BROCHE
+1<<2) 
+                                                            ;; @data Register =
+                                                             @base + (mask<<2) 
+                                                            ==> Switcher
+  107 0000004A         
+  108 0000004A         
+  109 0000004A         ;vvvvvvvvvvvvvvvvvvvvvvvFin configuration Switcher 
+  110 0000004A         
+  111 0000004A         
+  112 0000004A         
+  113 0000004A         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CLIGNOTTEMENT
+  114 0000004A         
+  115 0000004A 6033            str              r3, [r6]    ;; Allume LED1te LE
+                                                            D2
+  116 0000004C         
+  117 0000004C         
+  118 0000004C         
+  119 0000004C         ReadState
+  120 0000004C F8D8 A000       ldr              r10,[r8]
+  121 00000050 F8D7 B000       ldr              r11,[r7]
+  122 00000054 F1BA 0F00       CMP              r10,#0x00
+  123 00000058 D100            BNE              testBp2
+  124 0000005A 602A            str              r2 ,[r5]
+  125 0000005C         
+  126 0000005C         testBp2
+  127 0000005C F1BB 0F00       CMP              r11,#0x00
+  128 00000060 D1F4            BNE              ReadState
+  129 00000062 6022            str              r2, [r4]    ;; éteind la deuxie
+                                                            me led
+  130 00000064 E7F2            B                ReadState
+  131 00000066         
+  132 00000066 BF00            nop
+  133 00000068                 END
+              400FE108 
+              40025400 
+              4002551C 
+              40025500 
+              400250C0 
+              40025040 
+              40025080 
+              40024510 
+              4002451C 
+              40024004 
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+              40024008 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\bumperswitchoff.d -o.\objects\bumperswitchoff.o -I.\RTE\
+_Target_1 -IC:\Users\maglo\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\I
+nclude -IC:\Users\maglo\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\Device\ARM\ARMC
+M3\Include --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predef
+ine="__UVISION_VERSION SETA 528" --predefine="_RTE_ SETA 1" --predefine="ARMCM3
+ SETA 1" --list=.\listings\bumperswitchoff.lst bumperswitchoff.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 6 in file bumperswitchoff.s
+   Uses
+      None
+Comment: .text unused
+ReadState 0000004C
+
+Symbol: ReadState
+   Definitions
+      At line 119 in file bumperswitchoff.s
+   Uses
+      At line 128 in file bumperswitchoff.s
+      At line 130 in file bumperswitchoff.s
+
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 45 in file bumperswitchoff.s
+   Uses
+      At line 44 in file bumperswitchoff.s
+Comment: __main used once
+testBp2 0000005C
+
+Symbol: testBp2
+   Definitions
+      At line 126 in file bumperswitchoff.s
+   Uses
+      At line 123 in file bumperswitchoff.s
+Comment: testBp2 used once
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+BROCHE0 00000001
+
+Symbol: BROCHE0
+   Definitions
+      At line 37 in file bumperswitchoff.s
+   Uses
+      At line 104 in file bumperswitchoff.s
+Comment: BROCHE0 used once
+BROCHE0_1 00000003
+
+Symbol: BROCHE0_1
+   Definitions
+      At line 39 in file bumperswitchoff.s
+   Uses
+      At line 96 in file bumperswitchoff.s
+      At line 100 in file bumperswitchoff.s
+
+BROCHE1 00000002
+
+Symbol: BROCHE1
+   Definitions
+      At line 38 in file bumperswitchoff.s
+   Uses
+      At line 106 in file bumperswitchoff.s
+Comment: BROCHE1 used once
+BROCHE4_5 00000030
+
+Symbol: BROCHE4_5
+   Definitions
+      At line 35 in file bumperswitchoff.s
+   Uses
+      At line 62 in file bumperswitchoff.s
+      At line 66 in file bumperswitchoff.s
+      At line 70 in file bumperswitchoff.s
+      At line 76 in file bumperswitchoff.s
+      At line 78 in file bumperswitchoff.s
+
+BROCHE_4 00000010
+
+Symbol: BROCHE_4
+   Definitions
+      At line 33 in file bumperswitchoff.s
+   Uses
+      At line 83 in file bumperswitchoff.s
+Comment: BROCHE_4 used once
+BROCHE_5 00000020
+
+Symbol: BROCHE_5
+   Definitions
+      At line 34 in file bumperswitchoff.s
+   Uses
+      At line 88 in file bumperswitchoff.s
+Comment: BROCHE_5 used once
+GPIO_I_PUR 00000510
+
+Symbol: GPIO_I_PUR
+   Definitions
+      At line 30 in file bumperswitchoff.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 95 in file bumperswitchoff.s
+Comment: GPIO_I_PUR used once
+GPIO_O_DEN 0000051C
+
+Symbol: GPIO_O_DEN
+   Definitions
+      At line 27 in file bumperswitchoff.s
+   Uses
+      At line 65 in file bumperswitchoff.s
+      At line 99 in file bumperswitchoff.s
+
+GPIO_O_DIR 00000400
+
+Symbol: GPIO_O_DIR
+   Definitions
+      At line 19 in file bumperswitchoff.s
+   Uses
+      At line 61 in file bumperswitchoff.s
+Comment: GPIO_O_DIR used once
+GPIO_O_DR2R 00000500
+
+Symbol: GPIO_O_DR2R
+   Definitions
+      At line 23 in file bumperswitchoff.s
+   Uses
+      At line 69 in file bumperswitchoff.s
+Comment: GPIO_O_DR2R used once
+GPIO_PORTE_BASE 40024000
+
+Symbol: GPIO_PORTE_BASE
+   Definitions
+      At line 15 in file bumperswitchoff.s
+   Uses
+      At line 95 in file bumperswitchoff.s
+      At line 99 in file bumperswitchoff.s
+      At line 104 in file bumperswitchoff.s
+      At line 106 in file bumperswitchoff.s
+
+GPIO_PORTF_BASE 40025000
+
+Symbol: GPIO_PORTF_BASE
+   Definitions
+      At line 12 in file bumperswitchoff.s
+   Uses
+      At line 61 in file bumperswitchoff.s
+      At line 65 in file bumperswitchoff.s
+      At line 69 in file bumperswitchoff.s
+      At line 78 in file bumperswitchoff.s
+      At line 83 in file bumperswitchoff.s
+      At line 88 in file bumperswitchoff.s
+
+SYSCTL_PERIPH_GPIO 400FE108
+
+Symbol: SYSCTL_PERIPH_GPIO
+   Definitions
+      At line 9 in file bumperswitchoff.s
+   Uses
+      At line 49 in file bumperswitchoff.s
+Comment: SYSCTL_PERIPH_GPIO used once
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Absolute symbols
+
+13 symbols
+354 symbols in table

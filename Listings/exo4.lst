@@ -1,0 +1,88 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             | .text|, CODE,READONLY
+    2 00000000 00000004 
+                       n       EQU              0x4
+    3 00000000         
+    4 00000000                 ENTRY
+    5 00000000                 EXPORT           __main
+    6 00000000         __main
+    7 00000000         
+    8 00000000 F04F 0104       LDR              R1,=n
+    9 00000004 F04F 0201       MOV              R2,#1       ; contient le resul
+                                                            tat
+   10 00000008         
+   11 00000008         debut
+   12 00000008 FB02 F201       MUL              R2,R1
+   13 0000000C 3901            SUBS             R1,#1
+   14 0000000E D000            BEQ              fin
+   15 00000010 E7FA            B                debut
+   16 00000012         fin
+   17 00000012         
+   18 00000012                 END                          ; end of programm 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\exo4.d -o.\objects\exo4.o -I.\RTE\_Target_1 -IC:\Users\m
+aglo\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include -IC:\Users\magl
+o\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\Device\ARM\ARMCM3\Include --predefine
+="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION
+ SETA 528" --predefine="_RTE_ SETA 1" --predefine="ARMCM3 SETA 1" --list=.\list
+ings\exo4.lst Exo4.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+ .text 00000000
+
+Symbol:  .text
+   Definitions
+      At line 1 in file Exo4.s
+   Uses
+      None
+Comment:  .text unused
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 6 in file Exo4.s
+   Uses
+      At line 5 in file Exo4.s
+Comment: __main used once
+debut 00000008
+
+Symbol: debut
+   Definitions
+      At line 11 in file Exo4.s
+   Uses
+      At line 15 in file Exo4.s
+Comment: debut used once
+fin 00000012
+
+Symbol: fin
+   Definitions
+      At line 16 in file Exo4.s
+   Uses
+      At line 14 in file Exo4.s
+Comment: fin used once
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+n 00000004
+
+Symbol: n
+   Definitions
+      At line 2 in file Exo4.s
+   Uses
+      At line 8 in file Exo4.s
+Comment: n used once
+1 symbol
+340 symbols in table

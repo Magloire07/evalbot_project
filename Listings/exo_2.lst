@@ -1,0 +1,104 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             | .text|, CODE,READONLY
+    2 00000000 00000003 
+                       a       EQU              0x3
+    3 00000000 00000002 
+                       b       EQU              0x2
+    4 00000000         
+    5 00000000                 ENTRY
+    6 00000000                 EXPORT           __main
+    7 00000000         __main
+    8 00000000         
+    9 00000000 F04F 0103       LDR              R1,=a
+   10 00000004 F04F 0202       LDR              R2,=b
+   11 00000008 F04F 0300       MOV              R3,#0
+   12 0000000C         
+   13 0000000C 2900            CMP              R1,#0
+   14 0000000E D005            BEQ              fin
+   15 00000010 2A00            CMP              R2,#0
+   16 00000012 D003            BEQ              fin
+   17 00000014         debut
+   18 00000014 440B            ADD              R3,R1
+   19 00000016 3A01            SUBS             R2,#1
+   20 00000018 D000            BEQ              fin
+   21 0000001A E7FB            B                debut
+   22 0000001C         fin
+   23 0000001C         
+   24 0000001C                 END                          ; end of programm 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\exo_2.d -o.\objects\exo_2.o -I.\RTE\_Target_1 -IC:\Users
+\maglo\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include -IC:\Users\ma
+glo\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\Device\ARM\ARMCM3\Include --predefi
+ne="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSI
+ON SETA 528" --predefine="_RTE_ SETA 1" --predefine="ARMCM3 SETA 1" --list=.\li
+stings\exo_2.lst Exo_2.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+ .text 00000000
+
+Symbol:  .text
+   Definitions
+      At line 1 in file Exo_2.s
+   Uses
+      None
+Comment:  .text unused
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 7 in file Exo_2.s
+   Uses
+      At line 6 in file Exo_2.s
+Comment: __main used once
+debut 00000014
+
+Symbol: debut
+   Definitions
+      At line 17 in file Exo_2.s
+   Uses
+      At line 21 in file Exo_2.s
+Comment: debut used once
+fin 0000001C
+
+Symbol: fin
+   Definitions
+      At line 22 in file Exo_2.s
+   Uses
+      At line 14 in file Exo_2.s
+      At line 16 in file Exo_2.s
+      At line 20 in file Exo_2.s
+
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+a 00000003
+
+Symbol: a
+   Definitions
+      At line 2 in file Exo_2.s
+   Uses
+      At line 9 in file Exo_2.s
+Comment: a used once
+b 00000002
+
+Symbol: b
+   Definitions
+      At line 3 in file Exo_2.s
+   Uses
+      At line 10 in file Exo_2.s
+Comment: b used once
+2 symbols
+341 symbols in table

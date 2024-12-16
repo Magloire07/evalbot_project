@@ -1,0 +1,173 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             |.text|, CODE, READONLY
+    2 00000000         
+    3 00000000 00000000 
+                       max     EQU              0x0
+    4 00000000         
+    5 00000000                 ENTRY
+    6 00000000                 EXPORT           __main
+    7 00000000         
+    8 00000000         __main
+    9 00000000 480B            LDR              R0, =tab    ; Charger l'adresse
+                                                             de tab dans R0
+   10 00000002 7801            LDRB             R1, [R0]    ; Charger le premie
+                                                            r élément du tablea
+                                                            u dans R1 (initiali
+                                                            ser max avec tab[0]
+                                                            )
+   11 00000004 F04F 0203       MOV              R2, #3      ; Taille du tableau
+                                                             -1
+   12 00000008 F04F 0301       MOV              R3, #1      ; Indice pour parco
+                                                            urir le tableau (co
+                                                            mmence à 1)
+   13 0000000C         
+   14 0000000C         debut
+   15 0000000C 5CC4            LDRB             R4, [R0, R3] ; Charger l'octet 
+                                                            suivant dans R4 (ta
+                                                            b[R3])
+   16 0000000E 42A1            CMP              R1, R4      ; Comparer max (R1)
+                                                             avec tab[R3]
+   17 00000010 DB06            BLT              inf         ; Si tab[R3] > max,
+                                                             on met à jour max
+   18 00000012         ; Continuer la boucle
+   19 00000012 F103 0301       ADD              R3, #1      ; Incrémenter l'ind
+                                                            ice R3
+   20 00000016 F1A2 0201       SUB              R2, #1      ; Décrémenter le co
+                                                            mpteur de taille
+   21 0000001A 2A00            CMP              R2, #0      ; Si R2 atteint 0, 
+                                                            fin de la boucle
+   22 0000001C DCF6            BGT              debut       ; Si ce n'est pas f
+                                                            ini, revenir au déb
+                                                            ut
+   23 0000001E E006            B                fin         ; Sinon, aller à la
+                                                             fin
+   24 00000020         
+   25 00000020         inf
+   26 00000020 4621            MOV              R1, R4      ; Mettre à jour max
+                                                             avec tab[R3]
+   27 00000022 F103 0301       ADD              R3, #1      ; Incrémenter l'ind
+                                                            ice R3
+   28 00000026 F1A2 0201       SUB              R2, #1      ; Décrémenter le co
+                                                            mpteur de taille
+   29 0000002A 2A00            CMP              R2, #0      ; Si R2 atteint 0, 
+                                                            fin de la boucle
+   30 0000002C DCEE            BGT              debut       ; Si ce n'est pas f
+                                                            ini, revenir au déb
+                                                            ut
+   31 0000002E         
+   32 0000002E         fin
+   33 0000002E E7FE            B                fin         ; Boucle infinie à 
+                                                            la fin
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   34 00000030         
+   35 00000030 00000000        AREA             |tableau|, DATA, READONLY
+   36 00000000 02 03 04 
+              01       tab     DCB              2, 3, 4, 1  ; Définition du tab
+                                                            leau de 4 octets
+   37 00000004         
+   38 00000004                 END                          ; Fin du programme
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\exo7.d -o.\objects\exo7.o -I.\RTE\_Target_1 -IC:\Users\m
+aglo\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include -IC:\Users\magl
+o\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\Device\ARM\ARMCM3\Include --predefine
+="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION
+ SETA 528" --predefine="_RTE_ SETA 1" --predefine="ARMCM3 SETA 1" --list=.\list
+ings\exo7.lst Exo7.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 1 in file Exo7.s
+   Uses
+      None
+Comment: .text unused
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 8 in file Exo7.s
+   Uses
+      At line 6 in file Exo7.s
+Comment: __main used once
+debut 0000000C
+
+Symbol: debut
+   Definitions
+      At line 14 in file Exo7.s
+   Uses
+      At line 22 in file Exo7.s
+      At line 30 in file Exo7.s
+
+fin 0000002E
+
+Symbol: fin
+   Definitions
+      At line 32 in file Exo7.s
+   Uses
+      At line 23 in file Exo7.s
+      At line 33 in file Exo7.s
+
+inf 00000020
+
+Symbol: inf
+   Definitions
+      At line 25 in file Exo7.s
+   Uses
+      At line 17 in file Exo7.s
+Comment: inf used once
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+tab 00000000
+
+Symbol: tab
+   Definitions
+      At line 36 in file Exo7.s
+   Uses
+      At line 9 in file Exo7.s
+Comment: tab used once
+tableau 00000000
+
+Symbol: tableau
+   Definitions
+      At line 35 in file Exo7.s
+   Uses
+      None
+Comment: tableau unused
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+max 00000000
+
+Symbol: max
+   Definitions
+      At line 3 in file Exo7.s
+   Uses
+      None
+Comment: max unused
+1 symbol
+345 symbols in table

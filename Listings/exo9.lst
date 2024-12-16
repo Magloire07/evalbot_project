@@ -1,0 +1,236 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             |.text|, CODE, READONLY
+    2 00000000         
+    3 00000000         
+    4 00000000                 ENTRY
+    5 00000000                 EXPORT           __main
+    6 00000000         
+    7 00000000         __main
+    8 00000000 4812            LDR              R0, =tab    ; Charger l'adresse
+                                                             de tab dans R0
+    9 00000002 4913            LDR              R1, =max    ; charge l'adresse 
+                                                            du max
+   10 00000004 4D13            LDR              R5, =min    ; charge l'adresse 
+                                                            du min
+   11 00000006 7801            LDRB             R1, [R0]    ; Charger le premie
+                                                            r élément du tablea
+                                                            u dans R1 (initiali
+                                                            ser max avec tab[0]
+                                                            )
+   12 00000008 460D            MOV              R5, R1      ; Charger le premie
+                                                            r élément du tablea
+                                                            u dans R5 (initiali
+                                                            ser min avec tab[0]
+                                                            )
+   13 0000000A         
+   14 0000000A F04F 0203       MOV              R2, #3      ; Taille du tableau
+                                                             -1
+   15 0000000E F04F 0301       MOV              R3, #1      ; Indice pour parco
+                                                            urir le tableau (co
+                                                            mmence à 1)
+   16 00000012         
+   17 00000012         debut
+   18 00000012 5CC4            LDRB             R4, [R0, R3] ; Charger l'octet 
+                                                            suivant dans R4 (ta
+                                                            b[R3])
+   19 00000014 42A1            CMP              R1, R4      ; Comparer max (R1)
+                                                             avec tab[R3]
+   20 00000016 DB08            BLT              inf         ; Si tab[R3] > max,
+                                                             on met à jour max
+   21 00000018 42A5            CMP              R5, R4      ; Comparer min (R1)
+                                                             avec tab[R3]
+   22 0000001A DC0F            BGT              sup
+   23 0000001C         ; Continuer la boucle
+   24 0000001C F103 0301       ADD              R3, #1      ; Incrémenter l'ind
+                                                            ice R3
+   25 00000020 F1A2 0201       SUB              R2, #1      ; Décrémenter le co
+                                                            mpteur de taille
+   26 00000024 2A00            CMP              R2, #0      ; Si R2 atteint 0, 
+                                                            fin de la boucle
+   27 00000026 DCF4            BGT              debut       ; Si ce n'est pas f
+                                                            ini, revenir au déb
+                                                            ut
+   28 00000028 E00F            B                fin         ; Sinon, aller à la
+                                                             fin
+   29 0000002A         
+   30 0000002A         inf
+   31 0000002A 4621            MOV              R1, R4      ; Mettre à jour max
+                                                             avec tab[R3]
+   32 0000002C 42A5            CMP              R5, R4      ; Comparer min (R1)
+                                                             avec tab[R3]
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   33 0000002E DC05            BGT              sup         ; Si tab[R3] < min 
+                                                            on met à jour min 
+   34 00000030 F103 0301       ADD              R3, #1      ; Incrémenter l'ind
+                                                            ice R3
+   35 00000034 F1A2 0201       SUB              R2, #1      ; Décrémenter le co
+                                                            mpteur de taille
+   36 00000038 2A00            CMP              R2, #0      ; Si R2 atteint 0, 
+                                                            fin de la boucle
+   37 0000003A DCEA            BGT              debut       ; Si ce n'est pas f
+                                                            ini, revenir au déb
+                                                            ut
+   38 0000003C         
+   39 0000003C         
+   40 0000003C         sup
+   41 0000003C 4625            MOV              R5, R4      ; Mettre à jour min
+                                                             avec tab[R3]
+   42 0000003E F103 0301       ADD              R3, #1      ; Incrémenter l'ind
+                                                            ice R3
+   43 00000042 F1A2 0201       SUB              R2, #1      ; Décrémenter le co
+                                                            mpteur de taille
+   44 00000046 2A00            CMP              R2, #0      ; Si R2 atteint 0, 
+                                                            fin de la boucle
+   45 00000048 DCE3            BGT              debut       ; Si ce n'est pas f
+                                                            ini, revenir au déb
+                                                            ut
+   46 0000004A         fin
+   47 0000004A E7FE            B                fin         ; Boucle infinie à 
+                                                            la fin
+   48 0000004C         
+   49 0000004C 00000000 
+              00000000 
+              00000000         AREA             |tableau|, DATA, READONLY
+   50 00000000 02 03 08 
+              04       tab     DCB              2, 3, 8, 4  ; Définition du tab
+                                                            leau de 4 octets
+   51 00000004         
+   52 00000004                 AREA             |variable|, DATA, READWRITE ; D
+                                                            éclaration des donn
+                                                            ées en mémoire
+   53 00000000 00      max     space            1           ; variable max et m
+                                                            in de 1 octet 
+   54 00000001 00      min     space            1
+   55 00000002         
+   56 00000002                 END                          ; Fin du programme
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\exo9.d -o.\objects\exo9.o -I.\RTE\_Target_1 -IC:\Users\m
+aglo\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include -IC:\Users\magl
+o\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\Device\ARM\ARMCM3\Include --predefine
+="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION
+ SETA 528" --predefine="_RTE_ SETA 1" --predefine="ARMCM3 SETA 1" --list=.\list
+ings\exo9.lst Exo9.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 1 in file Exo9.s
+   Uses
+      None
+Comment: .text unused
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 7 in file Exo9.s
+   Uses
+      At line 5 in file Exo9.s
+Comment: __main used once
+debut 00000012
+
+Symbol: debut
+   Definitions
+      At line 17 in file Exo9.s
+   Uses
+      At line 27 in file Exo9.s
+      At line 37 in file Exo9.s
+      At line 45 in file Exo9.s
+
+fin 0000004A
+
+Symbol: fin
+   Definitions
+      At line 46 in file Exo9.s
+   Uses
+      At line 28 in file Exo9.s
+      At line 47 in file Exo9.s
+
+inf 0000002A
+
+Symbol: inf
+   Definitions
+      At line 30 in file Exo9.s
+   Uses
+      At line 20 in file Exo9.s
+Comment: inf used once
+sup 0000003C
+
+Symbol: sup
+   Definitions
+      At line 40 in file Exo9.s
+   Uses
+      At line 22 in file Exo9.s
+      At line 33 in file Exo9.s
+
+6 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+tab 00000000
+
+Symbol: tab
+   Definitions
+      At line 50 in file Exo9.s
+   Uses
+      At line 8 in file Exo9.s
+Comment: tab used once
+tableau 00000000
+
+Symbol: tableau
+   Definitions
+      At line 49 in file Exo9.s
+   Uses
+      None
+Comment: tableau unused
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+max 00000000
+
+Symbol: max
+   Definitions
+      At line 53 in file Exo9.s
+   Uses
+      At line 9 in file Exo9.s
+Comment: max used once
+min 00000001
+
+Symbol: min
+   Definitions
+      At line 54 in file Exo9.s
+   Uses
+      At line 10 in file Exo9.s
+Comment: min used once
+variable 00000000
+
+Symbol: variable
+   Definitions
+      At line 52 in file Exo9.s
+   Uses
+      None
+Comment: variable unused
+3 symbols
+348 symbols in table

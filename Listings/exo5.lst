@@ -1,0 +1,143 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             | .text|, CODE,READONLY
+    2 00000000 00000001 
+                       a       EQU              0x1
+    3 00000000 00000003 
+                       b       EQU              0x3
+    4 00000000 00000002 
+                       c       EQU              0x2
+    5 00000000 00000000 
+                       max     EQU              0x0
+    6 00000000         
+    7 00000000                 ENTRY
+    8 00000000                 EXPORT           __main
+    9 00000000         __main
+   10 00000000         
+   11 00000000 F04F 0001       LDR              R0,=a
+   12 00000004 F04F 0103       LDR              R1,=b
+   13 00000008 F04F 0202       LDR              R2,=c
+   14 0000000C 6804            LDR              R4,[R0]     ; a est par défaut 
+                                                            initialisé à max 
+   15 0000000E         
+   16 0000000E         ;on compare b avec a puis avec c 
+   17 0000000E 4288            CMP              R0,R1
+   18 00000010 DC03            BGT              asup
+   19 00000012 4291            CMP              R1,R2
+   20 00000014 DC05            BGT              bmax        ; b est max
+   21 00000016 6814            LDR              R4,[R2]     ; c est max 
+   22 00000018 D004            BEQ              fin
+   23 0000001A         asup                                 ; si a > b  on comp
+                                                            are avec c 
+   24 0000001A 4290            CMP              R0,R2
+   25 0000001C DC02            BGT              fin         ; a est max , on ne
+                                                             fait rien  car  ma
+                                                            x  déjà  initialisé
+                                                             avec a 
+   26 0000001E 4614            MOV              R4,R2       ; cest max 
+   27 00000020 E000            B                fin
+   28 00000022 460C    bmax    MOV              R4,R1
+   29 00000024         
+   30 00000024         fin
+   31 00000024         
+   32 00000024                 END                          ; end of programm 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\exo5.d -o.\objects\exo5.o -I.\RTE\_Target_1 -IC:\Users\m
+aglo\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include -IC:\Users\magl
+o\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\Device\ARM\ARMCM3\Include --predefine
+="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION
+ SETA 528" --predefine="_RTE_ SETA 1" --predefine="ARMCM3 SETA 1" --list=.\list
+ings\exo5.lst Exo5.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+ .text 00000000
+
+Symbol:  .text
+   Definitions
+      At line 1 in file Exo5.s
+   Uses
+      None
+Comment:  .text unused
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 9 in file Exo5.s
+   Uses
+      At line 8 in file Exo5.s
+Comment: __main used once
+asup 0000001A
+
+Symbol: asup
+   Definitions
+      At line 23 in file Exo5.s
+   Uses
+      At line 18 in file Exo5.s
+Comment: asup used once
+bmax 00000022
+
+Symbol: bmax
+   Definitions
+      At line 28 in file Exo5.s
+   Uses
+      At line 20 in file Exo5.s
+Comment: bmax used once
+fin 00000024
+
+Symbol: fin
+   Definitions
+      At line 30 in file Exo5.s
+   Uses
+      At line 22 in file Exo5.s
+      At line 25 in file Exo5.s
+      At line 27 in file Exo5.s
+
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+a 00000001
+
+Symbol: a
+   Definitions
+      At line 2 in file Exo5.s
+   Uses
+      At line 11 in file Exo5.s
+Comment: a used once
+b 00000003
+
+Symbol: b
+   Definitions
+      At line 3 in file Exo5.s
+   Uses
+      At line 12 in file Exo5.s
+Comment: b used once
+c 00000002
+
+Symbol: c
+   Definitions
+      At line 4 in file Exo5.s
+   Uses
+      At line 13 in file Exo5.s
+Comment: c used once
+max 00000000
+
+Symbol: max
+   Definitions
+      At line 5 in file Exo5.s
+   Uses
+      None
+Comment: max unused
+4 symbols
+344 symbols in table
