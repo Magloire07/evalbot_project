@@ -207,7 +207,6 @@ wait2   subs r1, #1
         str r2, [r6]    						;; Eteint LED car r2 = 0x00      
         BX  LR
 
-
 		;; Boucle d'attante
 WAIT	ldr r1, =0x052000 
 wait3	subs r1, #1
