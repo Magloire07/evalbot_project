@@ -47,8 +47,8 @@ BROCHE0_1           EQU     0x3     	; bumperR_L
 BROCHE_6			EQU		0x40		; switch1
 BROCHE_7			EQU		0x80		; switch2 
 BROCHE6_7			EQU		0xC0		; sw1 et sw2
-; blinking frequency
-DUREE   			EQU     0x80000
+
+DUREE   			EQU     0x80000  ; durée fréquence clignotement multiple  
 ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 	    ;; registres utilisés 
 		;;---------------------------------------------
@@ -96,7 +96,7 @@ __main
 		nop	   									;; pas necessaire en simu ou en debbug step by step...
 		
 		
-;--------------------------------------------------CONFIGURATION LED----------------------------------------------------------------------		 		
+;--------------------------------------------------CONFIGURATION LED 4_5----------------------------------------------------------------------		 		
 
         ldr r6, = GPIO_PORTF_BASE+GPIO_O_DIR    ;; 1 Pin du portF en sortie (broche 4 : 00010000)
         ldr r0, = BROCHE4_5 	
@@ -109,16 +109,16 @@ __main
 		ldr r6, = GPIO_PORTF_BASE+GPIO_O_DR2R	;; Choix de l'intensité de sortie (2mA)
         ldr r0, = BROCHE4_5			
         str r0, [r6]		
-				;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Bumper0_1
+;-------------------------------------------------------CONFIGURATION Bumper0_1-----------------------------------------------------------------
 		ldr r6, = GPIO_PORTE_BASE+GPIO_I_PUR	;; Pul_up 
         ldr r0, = BROCHE0_1		
         str r0, [r6]
 		
-		ldr r6, = GPIO_PORTE_BASE+GPIO_O_DEN	;; Enable Digital Function 
+		ldr r6, = GPIO_PORTE_BASE+GPIO_O_DEN ; Enable Digital Function 
         ldr r0, = BROCHE0_1	
         str r0, [r6] 		
 ;-------------------------------------------------------CONFIGURATION Switch6_7-----------------------------------------------------------------
-		ldr r6, = GPIO_PORTD_BASE+GPIO_I_PUR	;; Pul_up 
+		ldr r6, = GPIO_PORTD_BASE+GPIO_I_PUR ; Pul_up 
         ldr r0, = BROCHE6_7		
         str r0, [r6]
 		
@@ -180,7 +180,9 @@ appuisCourtDroit                   ; si on arrive à cette étiquette alors l'appu
 		 B   ecrireDirection	; écrir dans tableau la direction 
 		 
 ;------------------------------------------------FIN PROGRAMMATION DES DIRECTIONS----------------------------------------------------------------
-FinProgrammation             ; le programme est enregistré maintemant on peut parcourir le labyrinthe
+; le programme est enregistré maintemant
+; on peut parcourir le labyrinthe
+FinProgrammation   
          ; on on clignote pour signaler fin de la programmation 
 		 mov r3, #BROCHE4_5		
 		 ldr r6, = GPIO_PORTF_BASE + (BROCHE4_5<<2)
@@ -222,8 +224,11 @@ ecrireDirection
        STRB    R10, [R9, R5]  ; écrire dans le tableau à l'indice indiqué par R5
 	   ADD     R5,#1          ; incrémentation du compteur 
 	   B      ReadGauche      ; on retourne à la lecture des direction 
-;------------------------------------------------------------------------------------------------------------------------	
-checkAppuisLong  ldr r1, =0xFF000	  ;  dureé R1 correspond à la duree de l'appuis long  envirion 2seconde
+	   
+;-----------------------------------------------DEBUT LOGIQUE APUIS LONG -------------------------------------------------------------------------	
+;dureé R1 correspond à la duree 
+;de l'appuis long  envirion 2seconde
+checkAppuisLong  ldr r1, =0xFF000	  
 wait0	
 		ldr r7, = GPIO_PORTD_BASE + (BROCHE_6<<2)
 		ldr r10,[r7]
@@ -255,7 +260,7 @@ wait02
 		subs r1, #1		
         bne wait02
 		B   FinProgrammation
-;------------------------------------------------------------------------------------------------------------------------
+;------------------------------------------------DEBUT LOGIQUES DE CLIGNOTEMENTS ------------------------------------------------------------------------
 ; logique du clignote simple  à chaque touche 
 clignoteAuClic
 		ldr r1, =0xFFFFF                           ; durée d'allumage
@@ -294,7 +299,7 @@ WAIT	ldr r1, =0x052000
 wait3	subs r1, #1
         bne wait3
 		BX	LR
-;------------------------------------------------------------------------------------------------------------------------
+;--------------------------------------------------DECLARATION TABLEAU CONTENANT LE PROGRAMME ------------------------------------------------------------------------------
 		NOP
 		
     AREA |variable|, DATA, READWRITE   
