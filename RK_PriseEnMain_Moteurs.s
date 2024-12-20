@@ -56,7 +56,7 @@ DUREE   			EQU     0x80000  ; durée fréquence clignotement multiple
 		;;---------------------------------------------
 	    ;; registres réservés 
 		;;---------------------------------------------
-		;;  R2  R5  R9 
+		;;  R2  R5  R9 R11
 		;;---------------------------------------------
 		;; usages courants des régistres
 		;;---------------------------------------
@@ -84,7 +84,9 @@ __main
 
 		LDR R9, =buffer        ; Charger l'adresse de buffer dans R0
 		mov r2, #0x000       	; pour eteindre LED
-		mov R5, #0             ; compteur de d'indice dans la tableau 
+		mov R5, #0             ; compteur de d'indice dans la tableau lors de l'écriture elle vaudra aussi pour taille du tableau 
+		mov R11,#0             ; compteur de d'indice dans la tableau lors de la lecture
+
 
 
 		ldr r6, = SYSCTL_PERIPH_GPIO  			;; RCGC2
@@ -154,8 +156,8 @@ ReadGauche
 ;------------------------------------------------------------------------------------------------------------------------
 appuisCourtGauche    
 		 ; on allume la led gauche pour signaler le clic 
-		 mov r3, #BROCHE_4		
-		 ldr r6, = GPIO_PORTF_BASE + (BROCHE_4<<2)
+		 mov r3, #BROCHE_5		
+		 ldr r6, = GPIO_PORTF_BASE + (BROCHE_5<<2)
 		 BL clignoteAuClic ; gère l'allumage
          
 		 ; on définit l'entier correspondant à la direction gauche 
@@ -171,8 +173,8 @@ ReadDroit
 ;------------------------------------------------------------------------------------------------------------------------
 appuisCourtDroit                   ; si on arrive à cette étiquette alors l'appuis est court
 		 ; on allume la led droite pour signaler le clic 
-		 mov r3, #BROCHE_5
-		 ldr r6, = GPIO_PORTF_BASE + (BROCHE_5<<2)
+		 mov r3, #BROCHE_4
+		 ldr r6, = GPIO_PORTF_BASE + (BROCHE_4<<2)
          BL clignoteAuClic         ; gère l'allumage
 		 
 		 ; on définit l'entier correspondant à la direction gauche 
@@ -187,7 +189,21 @@ FinProgrammation
 		 mov r3, #BROCHE4_5		
 		 ldr r6, = GPIO_PORTF_BASE + (BROCHE4_5<<2)
 		 BL Clignotement
+		 
+;------------------------------------------------CLIC SUR SWITCH1 POUR COMMENCER----------------------------------------------------------------
+attenteDemarrage
+		 ldr r7, = GPIO_PORTD_BASE + (BROCHE_6<<2)
+		 ldr r10,[r7]
+		 CMP r10,#0x00 
+		 BNE attenteDemarrage
+		 BL  clignoteAuClic
+		 BL  WAIT
 ;---------------------------------------------------PARCOURS DU LABYRINTHE-------------------------------------------------------------	 
+
+
+
+
+
 parcours
 		 ; Activer les deux moteurs droit et gauche
 		 BL	MOTEUR_DROIT_ON
@@ -195,30 +211,14 @@ parcours
 		 ; Evalbot avance droit devant
 		 BL	MOTEUR_DROIT_AVANT	   
 		 BL	MOTEUR_GAUCHE_AVANT
-		 
+
          B testCollision 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        b parcours
+         b parcours
+		 
+		 
+		 
+		 
 ;-----------------------------------------------FIN PARCOURS DU LABYRINTHE-------------------------------------------------------------------------		
 
 ecrireDirection
@@ -297,7 +297,7 @@ wait2   subs r1, #1
         BX  LR
 ;------------------------------------------------------------------------------------------------------------------------
 ;; Boucle d'attente   simple  sans rien faire 
-WAIT	ldr r1, =0x052000 
+WAIT	ldr r1, =0xA00000 
 wait3	subs r1, #1
         bne wait3
 		BX	LR
@@ -314,7 +314,6 @@ testCollision
 		BL   MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche
 		BL   MOTEUR_DROIT_OFF			; déactiver le moteur droit
 		BL   Clignotement               ; on clignote à chaque collision 
-
 		B    lectureMemoire
 
 
@@ -328,7 +327,43 @@ testBp1
 		B    lectureMemoire
 ;----------------------------------LECTURE  MEMOIRE --------------------------------------------------------------------------------------
 lectureMemoire
+		LDRB    R4, [R9, R11]    ; Charger l'octet suivant dans R4 (buffer[R11])
+		CMP     R4, #1          
+		BNE     tourneADroite    ; si 2 tourne à droite R4 vaut 2 dans ce cas 
+		B       tourneAGauche    ; sinon tourne à gauche  R4 vaut 1 dans ce cas
+		
+;----------------------------------TOURNE A DROITE OU GAUCHE  --------------------------------------------------------------------------------------
+tourneADroite
+		 BL	MOTEUR_DROIT_ON
+		 BL	MOTEUR_DROIT_ARRIERE
+		 BL WAIT                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
+		 BL  MOTEUR_DROIT_OFF			; déactiver le moteur droit
+		 ADD R11,#1						; incrémentation pour la prochaine direction 
+		 CMP R11,R5				   ; on vérifie si tout le programme a été lu 
+		 BEQ fin                   ; c'est la fin si oui 
+		 B   parcours              ; on continue le parcours si non 
+tourneAGauche
+		 BL	MOTEUR_GAUCHE_ON
+		 BL	MOTEUR_GAUCHE_ARRIERE
+		 BL WAIT                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
+		 BL  MOTEUR_GAUCHE_OFF			; déactiver le moteur droit
+		 ADD R11,#1						; incrémentation pour la prochaine direction 
+		 CMP R11,R5				   ; on vérifie si tout le programme a été lu 
+		 BEQ fin                   ; c'est la fin si oui 
+		 B   parcours              ; on continue le parcours si non 
 
+fin   
+		 BL	MOTEUR_DROIT_ON
+		 BL	MOTEUR_GAUCHE_ON
+ 		 BL	MOTEUR_DROIT_AVANT
+		 BL	MOTEUR_GAUCHE_AVANT
+		 BL WAIT 
+		 BL WAIT 
+		 BL   MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche
+		 BL   MOTEUR_DROIT_OFF			; déactiver le moteur droit
+		 BL Clignotement
+		 BL Clignotement
+		 
 ;--------------------------------------------------DECLARATION TABLEAU CONTENANT LE PROGRAMME ------------------------------------------------------------------------------
 
 
