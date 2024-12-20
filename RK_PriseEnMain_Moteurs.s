@@ -46,7 +46,7 @@ DUREE   			EQU     0x80000
 
 	    ;; registres utilisés 
 		;;-----------------------
-		;;   R0  R2  R3  R4  R5  R6
+		;;   R0  R1 R2  R3  R4  R5  R6 R7 R8 R10
 		;;-------------------------
 		ENTRY
 		EXPORT	__main		
@@ -65,6 +65,11 @@ DUREE   			EQU     0x80000
 		IMPORT  MOTEUR_GAUCHE_ARRIERE		; moteur gauche tourne vers l'arrière
 		IMPORT  MOTEUR_GAUCHE_INVERSE		; inverse le sens de rotation du moteur gauche
 __main	
+
+		LDR R9, =buffer        ; Charger l'adresse de buffer dans R0
+		mov r2, #0x000       					;; pour eteindre LED
+		mov R5, #0          ; compteur de d'indice dans la tableau 
+
 
 		ldr r6, = SYSCTL_PERIPH_GPIO  			;; RCGC2
         mov r0, #0x00000038  					;; Enable clock sur GPIO E , F  et D où sont branchés les leds (0x28 == 0b111000)
@@ -106,7 +111,6 @@ __main
         ldr r0, = BROCHE6_7	
         str r0, [r6] 
 		
-		mov r2, #0x000       					;; pour eteindre LED
 		
 		;vvvvvvvvvvvvvvvvvvvvvvvFin configuration 
 ;		ldr r4, = GPIO_PORTF_BASE + (BROCHE_4<<2)  ;; pour allumer la led4
@@ -125,6 +129,8 @@ __main
 		
 		;mov r4, #BROCHE_6		
 		ldr r7, = GPIO_PORTD_BASE + (BROCHE_6<<2)
+		;mov r4, #BROCHE_7		
+		ldr r8, = GPIO_PORTD_BASE + (BROCHE_7<<2)
 		
 		; allumage des deux leds 
 		str r3, [r6]
@@ -134,14 +140,47 @@ __main
 ReadState
 		 ldr r10,[r7]
 		 CMP r10,#0x00 
-		 BNE  ReadState
+		 BNE  ReadState		 
 		 B   checkAppuisLong  
 Debut  
 		 BL     Clignotement
 		 
 		 ; eteindre les deux leds 
 		 ;str r2, [r6]
-moteur		
+		 
+debutLectureProgramme
+ReadGauche
+		 ldr r10,[r7]
+		 CMP r10,#0x00 
+		 BNE  ReadDroit              ; on test le switch gauche si le droit n'est pas appuyé 
+		 B    checkAppuisLongGauche  ; on vérifie si l'appuis est long
+appuisCourtGauche
+		 ; on allume au  clic
+		 mov r3, #BROCHE_4		
+		 ldr r6, = GPIO_PORTF_BASE + (BROCHE_4<<2)
+		 BL clignoteAuClic
+
+		 
+		 mov r10,#1; 1 pour  gauche 
+		 B   ecrireDirection
+
+ReadDroit
+		 ldr r10,[r8]
+		 CMP r10,#0x00 
+		 BNE  ReadGauche
+		 B   checkAppuisLongDroit
+appuisCourtDroit
+		 mov r3, #BROCHE_5
+		 ldr r6, = GPIO_PORTF_BASE + (BROCHE_5<<2)
+         BL clignoteAuClic
+		 mov r10,#2; 2 pour  droite 
+		 B   ecrireDirection
+		 
+FinProgrammation
+		 mov r3, #BROCHE4_5		
+		 ldr r6, = GPIO_PORTF_BASE + (BROCHE4_5<<2)
+		 BL Clignotement
+debut
 		 ; Activer les deux moteurs droit et gauche
 		 BL	MOTEUR_DROIT_ON
 		 BL	MOTEUR_GAUCHE_ON
@@ -157,8 +196,6 @@ moteur
 		 ;BL	WAIT
 
 
-
-
 		 ; eteindre les deux leds 
 		 ;ldr r6, = GPIO_PORTF_BASE + (BROCHE4_5<<2)
 		 
@@ -168,12 +205,20 @@ moteur
 		; Avancement pendant une période (deux WAIT)
 		;BL	WAIT	; BL (Branchement vers le lien WAIT); possibilité de retour à la suite avec (BX LR)
 		;BL	WAIT
-		; Rotation à droite de l'Evalbot pendant une demi-période (1 seul WAIT)
+		;Rotation à droite de l'Evalbot pendant une demi-période (1 seul WAIT)
 		;BL	MOTEUR_DROIT_ARRIERE   ; MOTEUR_DROIT_INVERSE
 		;BL	WAIT
 		;ldr r10,[r8]
 
-        b moteur
+        b debut
+		
+		
+		
+ecrireDirection
+       STRB    R10, [R9, R5]
+	   ADD     R5,#1          ; incrémentation du compteur 
+	   B      ReadGauche
+
 		
 checkAppuisLong  ldr r1, =0xFF000	  ; correspond à la duree de l'appuis long 
 wait0	
@@ -183,6 +228,36 @@ wait0
 		subs r1, #1		
         bne wait0
 		B   Debut
+		
+		
+checkAppuisLongGauche
+		ldr r1, =0xFF000	  ; correspond à la duree de l'appuis long 
+wait01	
+		ldr r10,[r7]
+		CMP r10,#0x00
+		BNE appuisCourtGauche     ; si l'utilisateur relâche pendant le wait  ei r10=0x01 , c'est un appuis court sur gauche 
+		subs r1, #1		
+        bne wait01
+		B   FinProgrammation 
+		
+checkAppuisLongDroit  
+		ldr r1, =0xFF000	  	; correspond à la duree de l'appuis long 
+wait02	
+		ldr r10,[r8]
+		CMP r10,#0x00
+		BNE appuisCourtDroit     ; si l'utilisateur relâche pendant le wait  ei r10=0x01 , c'est un appuis court sur droit
+		subs r1, #1		
+        bne wait02
+		B   FinProgrammation
+		
+clignoteAuClic
+		ldr r1, =0xFFFFF                           ; durée d'allumage
+		str r3, [r6]    						      
+wait21  subs r1, #1
+        bne wait21	
+        str r2, [r6]    						;; Eteint LED car r2 = 0x00      
+        BX  LR
+
 
 Clignotement 
 		ldr r4, =0x8                           ; durée de clignotement
@@ -215,4 +290,7 @@ wait3	subs r1, #1
 
 
 		NOP
+		
+    AREA |variable|, DATA, READWRITE   
+buffer     space     50                 ;   tableau de 50 octets pour contenir les instructions 
         END
