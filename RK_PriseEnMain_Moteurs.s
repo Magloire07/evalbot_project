@@ -1,13 +1,18 @@
-	;; RK - Evalbot (Cortex M3 de Texas Instrument)
-; programme - Pilotage 2 Moteurs Evalbot par PWM tout en ASM (Evalbot tourne sur lui même)
-
-
+;------------------------------------------------------------
+;#Authors
+;@Kokou KOMBEDE
+;@Ounissa SADAOUI
+;Parcours E3FI-3I
+;année 2024-2025
+;-------------------------------------------------------------
+; RK - Evalbot (Cortex M3 de Texas Instrument)
+; programme - Pilotage  Evalbot pour parcouris un labyrinthe
+;--------------------------------------------------------------
 
 		AREA    |.text|, CODE, READONLY
 			
 ; This register controls the clock gating logic in normal Run mode
 SYSCTL_PERIPH_GPIO EQU		0x400FE108		; SYSCTL_RCGC2_R (p291 datasheet de lm3s9b92.pdf)
-
 
 GPIO_PORTF_BASE		EQU		0x40025000		; GPIO Port F (APB) base: 0x4002.5000 
 
@@ -44,7 +49,7 @@ BROCHE_7			EQU		0x80		; switch2
 BROCHE6_7			EQU		0xC0		; sw1 et sw2
 ; blinking frequency
 DUREE   			EQU     0x80000
-
+;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 	    ;; registres utilisés 
 		;;---------------------------------------------
 		;;   R0  R1 R2  R3  R4  R5  R6  R7  R9 R10
@@ -53,6 +58,11 @@ DUREE   			EQU     0x80000
 		;;---------------------------------------------
 		;;  R2  R5  R9 
 		;;---------------------------------------------
+		;; usages courants des régistres
+		;;---------------------------------------
+		;; r3,r2,r6 pour lire les pins de leds et allumer puis éteindre
+		;;
+;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 		ENTRY
 		EXPORT	__main		
 		;; The IMPORT command specifies that a symbol is defined in a shared object at runtime.
@@ -69,6 +79,7 @@ DUREE   			EQU     0x80000
 		IMPORT  MOTEUR_GAUCHE_AVANT			; moteur gauche tourne vers l'avant
 		IMPORT  MOTEUR_GAUCHE_ARRIERE		; moteur gauche tourne vers l'arrière
 		IMPORT  MOTEUR_GAUCHE_INVERSE		; inverse le sens de rotation du moteur gauche
+;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 __main	
 
 		LDR R9, =buffer        ; Charger l'adresse de buffer dans R0
@@ -85,8 +96,7 @@ __main
 		nop	   									;; pas necessaire en simu ou en debbug step by step...
 		
 		
-		
-				;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION LED
+;--------------------------------------------------CONFIGURATION LED----------------------------------------------------------------------		 		
 
         ldr r6, = GPIO_PORTF_BASE+GPIO_O_DIR    ;; 1 Pin du portF en sortie (broche 4 : 00010000)
         ldr r0, = BROCHE4_5 	
@@ -107,7 +117,7 @@ __main
 		ldr r6, = GPIO_PORTE_BASE+GPIO_O_DEN	;; Enable Digital Function 
         ldr r0, = BROCHE0_1	
         str r0, [r6] 		
-						;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Switch6_7
+;-------------------------------------------------------CONFIGURATION Switch6_7-----------------------------------------------------------------
 		ldr r6, = GPIO_PORTD_BASE+GPIO_I_PUR	;; Pul_up 
         ldr r0, = BROCHE6_7		
         str r0, [r6]
@@ -116,41 +126,32 @@ __main
         ldr r0, = BROCHE6_7	
         str r0, [r6] 
 		
-
+;------------------------------------------------------------------------------------------------------------------------		 
 		; Configure les PWM + GPIO
 		BL	MOTEUR_INIT	   		   
-
-		
-
-		
-		
-		
-		
+;------------------------------------------------------------------------------------------------------------------------		 
 		; allumage des deux leds
 		mov r3, #BROCHE4_5		
 		ldr r6, = GPIO_PORTF_BASE + (BROCHE4_5<<2)
 		str r3, [r6]
 		
-		
+;---------------------------------------------LECTURE DU PREMIER APPUIS LONG ----------------------------------------------------------------------		 		
 ReadState
 		 ldr r7, = GPIO_PORTD_BASE + (BROCHE_6<<2)
 		 ldr r10,[r7]
 		 CMP r10,#0x00 
 		 BNE  ReadState		 
-		 B   checkAppuisLong  
-Debut  
-		 BL     Clignotement
-		 
-		 ; eteindre les deux leds 
-		 ;str r2, [r6]
-
-debutLectureProgramme
+		 B   checkAppuisLong
+;----------------------------------------------DEBUIT PROGRAMMATION DES DIRECTIONS --------------------------------------------------------------------------		 
+DebutProgrammation
+		BL     Clignotement
 ReadGauche
 		 ldr r7, = GPIO_PORTD_BASE + (BROCHE_6<<2)  ; affectation du switch 1 
 		 ldr r10,[r7]                               ; lecture de l'état du switch 1
 		 CMP r10,#0x00 								; vérifier si c'est appuyé
 		 BNE  ReadDroit              ; on  branche vers le switch1( gauche) pour tester  si jamais le droit n'est pas appuyé 
 		 B    checkAppuisLongGauche  ; on vérifie si l'appuis est long
+;------------------------------------------------------------------------------------------------------------------------
 appuisCourtGauche    
 		 ; on allume la led gauche pour signaler le clic 
 		 mov r3, #BROCHE_4		
@@ -160,13 +161,14 @@ appuisCourtGauche
 		 ; on définit l'entier correspondant à la direction gauche 
 		 mov r10,#1			 ; 1 pour  gauche 
 		 B   ecrireDirection ; écrir dans buffer la direction 
-
+;------------------------------------------------------------------------------------------------------------------------
 ReadDroit
 		 ldr r7, = GPIO_PORTD_BASE + (BROCHE_7<<2)
 		 ldr r10,[r7]
 		 CMP r10,#0x00 
 		 BNE  ReadGauche
 		 B   checkAppuisLongDroit  ; on vérifi si l'appuis est long ou court
+;------------------------------------------------------------------------------------------------------------------------
 appuisCourtDroit                   ; si on arrive à cette étiquette alors l'appuis est court
 		 ; on allume la led droite pour signaler le clic 
 		 mov r3, #BROCHE_5
@@ -177,12 +179,13 @@ appuisCourtDroit                   ; si on arrive à cette étiquette alors l'appu
 		 mov r10,#2				; 2 pour  droite 
 		 B   ecrireDirection	; écrir dans tableau la direction 
 		 
+;------------------------------------------------FIN PROGRAMMATION DES DIRECTIONS----------------------------------------------------------------
 FinProgrammation             ; le programme est enregistré maintemant on peut parcourir le labyrinthe
          ; on on clignote pour signaler fin de la programmation 
 		 mov r3, #BROCHE4_5		
 		 ldr r6, = GPIO_PORTF_BASE + (BROCHE4_5<<2)
 		 BL Clignotement
-		 
+;---------------------------------------------------DEBUT DE PARCOURS DU LABYRINTHE-------------------------------------------------------------	 
 debut
 		 ; Activer les deux moteurs droit et gauche
 		 BL	MOTEUR_DROIT_ON
@@ -212,16 +215,14 @@ debut
 
 
 
-        b debut
-		
-		
-		
+        b debut	
+;-----------------------------------------------FIN PARCOURS DU LABYRINTHE-------------------------------------------------------------------------		
+
 ecrireDirection
        STRB    R10, [R9, R5]  ; écrire dans le tableau à l'indice indiqué par R5
 	   ADD     R5,#1          ; incrémentation du compteur 
 	   B      ReadGauche      ; on retourne à la lecture des direction 
-
-		
+;------------------------------------------------------------------------------------------------------------------------	
 checkAppuisLong  ldr r1, =0xFF000	  ;  dureé R1 correspond à la duree de l'appuis long  envirion 2seconde
 wait0	
 		ldr r7, = GPIO_PORTD_BASE + (BROCHE_6<<2)
@@ -230,9 +231,9 @@ wait0
 		BNE ReadState     ; si l'utilisateur relâche pendant le wait  c'est à dire  r10=0x01 , on recommence 
 		subs r1, #1		
         bne wait0
-		B   Debut
+		B   DebutProgrammation 
 		
-		
+;------------------------------------------------------------------------------------------------------------------------
 checkAppuisLongGauche
 		ldr r1, =0xFF000	  ; R1 correspond à la duree de l'appuis long 
 wait01	
@@ -243,7 +244,7 @@ wait01
 		subs r1, #1		          ; sinon on continue de lire dans que durée n'est pas acroulé
         bne wait01
 		B   FinProgrammation      ; si on arrive ici alor l'appuis est long donc c'est la fin de la programmation 
-		
+;------------------------------------------------------------------------------------------------------------------------
 checkAppuisLongDroit  
 		ldr r1, =0xFF000	  	; correspond à la duree de l'appuis long 
 wait02	
@@ -254,8 +255,7 @@ wait02
 		subs r1, #1		
         bne wait02
 		B   FinProgrammation
-
-
+;------------------------------------------------------------------------------------------------------------------------
 ; logique du clignote simple  à chaque touche 
 clignoteAuClic
 		ldr r1, =0xFFFFF                           ; durée d'allumage
@@ -264,7 +264,7 @@ wait21  subs r1, #1
         bne wait21	
         str r2, [r6]    						;; Eteint LED car r2 = 0x00      
         BX  LR                                  ;; retour à l'endroit ou clignoteAuClic est appeler 
-
+;------------------------------------------------------------------------------------------------------------------------
 ; logique de clignotement multiple   avant et apprès le programmation 
 Clignotement 
 		ldr r4, =0x8                           ; durée de clignotement
@@ -288,13 +288,13 @@ wait2   subs r1, #1
 		
         str r2, [r6]    						;; Eteint LED car r2 = 0x00      
         BX  LR
-
+;------------------------------------------------------------------------------------------------------------------------
 ;; Boucle d'attente   simple  sans rien faire 
 WAIT	ldr r1, =0x052000 
 wait3	subs r1, #1
         bne wait3
 		BX	LR
-
+;------------------------------------------------------------------------------------------------------------------------
 		NOP
 		
     AREA |variable|, DATA, READWRITE   

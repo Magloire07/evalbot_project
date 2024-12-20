@@ -116,189 +116,193 @@ ARM Macro Assembler    Page 2
    49 00000000         ;;---------------------------------------------
    50 00000000         ;;   R0  R1 R2  R3  R4  R5  R6  R7  R9 R10
    51 00000000         ;;---------------------------------------------
-   52 00000000         
-   53 00000000                 ENTRY
-   54 00000000                 EXPORT           __main
-   55 00000000         ;; The IMPORT command specifies that a symbol is defined
+   52 00000000         ;; registres réservés 
+   53 00000000         ;;---------------------------------------------
+   54 00000000         ;;  R2  R5  R9 
+   55 00000000         ;;---------------------------------------------
+   56 00000000                 ENTRY
+   57 00000000                 EXPORT           __main
+   58 00000000         ;; The IMPORT command specifies that a symbol is defined
                         in a shared object at runtime.
-   56 00000000                 IMPORT           MOTEUR_INIT ; initialise les mo
+   59 00000000                 IMPORT           MOTEUR_INIT ; initialise les mo
                                                             teurs (configure le
                                                             s pwms + GPIO)
-   57 00000000         
-   58 00000000                 IMPORT           MOTEUR_DROIT_ON ; activer le mo
-                                                            teur droit
-   59 00000000                 IMPORT           MOTEUR_DROIT_OFF ; déactiver le
+   60 00000000         
 
 
 
 ARM Macro Assembler    Page 3 
 
 
+   61 00000000                 IMPORT           MOTEUR_DROIT_ON ; activer le mo
+                                                            teur droit
+   62 00000000                 IMPORT           MOTEUR_DROIT_OFF ; déactiver le
                                                              moteur droit
-   60 00000000                 IMPORT           MOTEUR_DROIT_AVANT ; moteur dro
+   63 00000000                 IMPORT           MOTEUR_DROIT_AVANT ; moteur dro
                                                             it tourne vers l'av
                                                             ant
-   61 00000000                 IMPORT           MOTEUR_DROIT_ARRIERE ; moteur d
+   64 00000000                 IMPORT           MOTEUR_DROIT_ARRIERE ; moteur d
                                                             roit tourne vers l'
                                                             arrière
-   62 00000000                 IMPORT           MOTEUR_DROIT_INVERSE ; inverse 
+   65 00000000                 IMPORT           MOTEUR_DROIT_INVERSE ; inverse 
                                                             le sens de rotation
                                                              du moteur droit
-   63 00000000         
-   64 00000000                 IMPORT           MOTEUR_GAUCHE_ON ; activer le m
+   66 00000000         
+   67 00000000                 IMPORT           MOTEUR_GAUCHE_ON ; activer le m
                                                             oteur gauche
-   65 00000000                 IMPORT           MOTEUR_GAUCHE_OFF ; déactiver l
+   68 00000000                 IMPORT           MOTEUR_GAUCHE_OFF ; déactiver l
                                                             e moteur gauche
-   66 00000000                 IMPORT           MOTEUR_GAUCHE_AVANT ; moteur ga
+   69 00000000                 IMPORT           MOTEUR_GAUCHE_AVANT ; moteur ga
                                                             uche tourne vers l'
                                                             avant
-   67 00000000                 IMPORT           MOTEUR_GAUCHE_ARRIERE ; moteur 
+   70 00000000                 IMPORT           MOTEUR_GAUCHE_ARRIERE ; moteur 
                                                             gauche tourne vers 
                                                             l'arrière
-   68 00000000                 IMPORT           MOTEUR_GAUCHE_INVERSE ; inverse
+   71 00000000                 IMPORT           MOTEUR_GAUCHE_INVERSE ; inverse
                                                              le sens de rotatio
                                                             n du moteur gauche
-   69 00000000         __main
-   70 00000000         
-   71 00000000 F8DF 914C       LDR              R9, =buffer ; Charger l'adresse
+   72 00000000         __main
+   73 00000000         
+   74 00000000 F8DF 914C       LDR              R9, =buffer ; Charger l'adresse
                                                              de buffer dans R0
-   72 00000004 F04F 0200       mov              r2, #0x000  ; pour eteindre LED
+   75 00000004 F04F 0200       mov              r2, #0x000  ; pour eteindre LED
                                                             
-   73 00000008 F04F 0500       mov              R5, #0      ; compteur de d'ind
+   76 00000008 F04F 0500       mov              R5, #0      ; compteur de d'ind
                                                             ice dans la tableau
                                                              
-   74 0000000C         
-   75 0000000C         
-   76 0000000C 4E51            ldr              r6, = SYSCTL_PERIPH_GPIO 
+   77 0000000C         
+   78 0000000C         
+   79 0000000C 4E51            ldr              r6, = SYSCTL_PERIPH_GPIO 
                                                             ;; RCGC2
-   77 0000000E F04F 0038       mov              r0, #0x00000038 ;; Enable clock
+   80 0000000E F04F 0038       mov              r0, #0x00000038 ;; Enable clock
                                                              sur GPIO E , F  et
                                                              D où sont branchés
                                                              les leds (0x28 == 
                                                             0b111000)
-   78 00000012 6030            str              r0, [r6]
-   79 00000014         ;; "There must be a delay of 3 system clocks before any 
+   81 00000012 6030            str              r0, [r6]
+   82 00000014         ;; "There must be a delay of 3 system clocks before any 
                        GPIO reg. access  (p413 datasheet de lm3s9B92.pdf)
-   80 00000014 BF00            nop                          ;; tres tres import
+   83 00000014 BF00            nop                          ;; tres tres import
                                                             ant....
-   81 00000016 BF00            nop
-   82 00000018 BF00            nop                          ;; pas necessaire e
+   84 00000016 BF00            nop
+   85 00000018 BF00            nop                          ;; pas necessaire e
                                                             n simu ou en debbug
                                                              step by step...
-   83 0000001A         
-   84 0000001A         
-   85 0000001A         
-   86 0000001A         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION LED
+   86 0000001A         
    87 0000001A         
-   88 0000001A 4E4F            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DI
-R 
-                                                            ;; 1 Pin du portF e
+   88 0000001A         
+   89 0000001A         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION LED
+   90 0000001A         
 
 
 
 ARM Macro Assembler    Page 4 
 
 
+   91 0000001A 4E4F            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DI
+R 
+                                                            ;; 1 Pin du portF e
                                                             n sortie (broche 4 
                                                             : 00010000)
-   89 0000001C F04F 0030       ldr              r0, = BROCHE4_5
-   90 00000020 6030            str              r0, [r6]
-   91 00000022         
-   92 00000022 4E4E            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DE
+   92 0000001C F04F 0030       ldr              r0, = BROCHE4_5
+   93 00000020 6030            str              r0, [r6]
+   94 00000022         
+   95 00000022 4E4E            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DE
 N 
                                                             ;; Enable Digital F
                                                             unction 
-   93 00000024 F04F 0030       ldr              r0, = BROCHE4_5
-   94 00000028 6030            str              r0, [r6]
-   95 0000002A         
-   96 0000002A 4E4D            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DR
+   96 00000024 F04F 0030       ldr              r0, = BROCHE4_5
+   97 00000028 6030            str              r0, [r6]
+   98 0000002A         
+   99 0000002A 4E4D            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DR
 2R 
                                                             ;; Choix de l'inten
                                                             sité de sortie (2mA
                                                             )
-   97 0000002C F04F 0030       ldr              r0, = BROCHE4_5
-   98 00000030 6030            str              r0, [r6]
-   99 00000032         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Bumper0_1
-  100 00000032 4E4C            ldr              r6, = GPIO_PORTE_BASE+GPIO_I_PU
+  100 0000002C F04F 0030       ldr              r0, = BROCHE4_5
+  101 00000030 6030            str              r0, [r6]
+  102 00000032         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Bumper0_1
+  103 00000032 4E4C            ldr              r6, = GPIO_PORTE_BASE+GPIO_I_PU
 R 
                                                             ;; Pul_up 
-  101 00000034 F04F 0003       ldr              r0, = BROCHE0_1
-  102 00000038 6030            str              r0, [r6]
-  103 0000003A         
-  104 0000003A 4E4B            ldr              r6, = GPIO_PORTE_BASE+GPIO_O_DE
+  104 00000034 F04F 0003       ldr              r0, = BROCHE0_1
+  105 00000038 6030            str              r0, [r6]
+  106 0000003A         
+  107 0000003A 4E4B            ldr              r6, = GPIO_PORTE_BASE+GPIO_O_DE
 N 
                                                             ;; Enable Digital F
                                                             unction 
-  105 0000003C F04F 0003       ldr              r0, = BROCHE0_1
-  106 00000040 6030            str              r0, [r6]
-  107 00000042         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Switch6_7
-  108 00000042 4E4A            ldr              r6, = GPIO_PORTD_BASE+GPIO_I_PU
+  108 0000003C F04F 0003       ldr              r0, = BROCHE0_1
+  109 00000040 6030            str              r0, [r6]
+  110 00000042         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Switch6_7
+  111 00000042 4E4A            ldr              r6, = GPIO_PORTD_BASE+GPIO_I_PU
 R 
                                                             ;; Pul_up 
-  109 00000044 F04F 00C0       ldr              r0, = BROCHE6_7
-  110 00000048 6030            str              r0, [r6]
-  111 0000004A         
-  112 0000004A 4E49            ldr              r6, = GPIO_PORTD_BASE+GPIO_O_DE
+  112 00000044 F04F 00C0       ldr              r0, = BROCHE6_7
+  113 00000048 6030            str              r0, [r6]
+  114 0000004A         
+  115 0000004A 4E49            ldr              r6, = GPIO_PORTD_BASE+GPIO_O_DE
 N 
                                                             ;; Enable Digital F
                                                             unction 
-  113 0000004C F04F 00C0       ldr              r0, = BROCHE6_7
-  114 00000050 6030            str              r0, [r6]
-  115 00000052         
-  116 00000052         
-  117 00000052         ; Configure les PWM + GPIO
-  118 00000052 F7FF FFFE       BL               MOTEUR_INIT
-  119 00000056         
-  120 00000056         
-  121 00000056         
+  116 0000004C F04F 00C0       ldr              r0, = BROCHE6_7
+  117 00000050 6030            str              r0, [r6]
+  118 00000052         
+  119 00000052         
+  120 00000052         ; Configure les PWM + GPIO
+  121 00000052 F7FF FFFE       BL               MOTEUR_INIT
   122 00000056         
   123 00000056         
   124 00000056         
   125 00000056         
-  126 00000056         ; allumage des deux leds
-  127 00000056 F04F 0330       mov              r3, #BROCHE4_5
-  128 0000005A 4E46            ldr              r6, = GPIO_PORTF_BASE + (BROCHE
+  126 00000056         
+  127 00000056         
+  128 00000056         
 
 
 
 ARM Macro Assembler    Page 5 
 
 
+  129 00000056         ; allumage des deux leds
+  130 00000056 F04F 0330       mov              r3, #BROCHE4_5
+  131 0000005A 4E46            ldr              r6, = GPIO_PORTF_BASE + (BROCHE
 4_5<<2)
-  129 0000005C 6033            str              r3, [r6]
-  130 0000005E         
-  131 0000005E         
-  132 0000005E         ReadState
-  133 0000005E 4F46            ldr              r7, = GPIO_PORTD_BASE + (BROCHE
+  132 0000005C 6033            str              r3, [r6]
+  133 0000005E         
+  134 0000005E         
+  135 0000005E         ReadState
+  136 0000005E 4F46            ldr              r7, = GPIO_PORTD_BASE + (BROCHE
 _6<<2)
-  134 00000060 F8D7 A000       ldr              r10,[r7]
-  135 00000064 F1BA 0F00       CMP              r10,#0x00
-  136 00000068 D1F9            BNE              ReadState
-  137 0000006A E032            B                checkAppuisLong
-  138 0000006C         Debut
-  139 0000006C F000 F858       BL               Clignotement
-  140 00000070         
-  141 00000070         ; eteindre les deux leds 
-  142 00000070         ;str r2, [r6]
-  143 00000070         
-  144 00000070         debutLectureProgramme
-  145 00000070         ReadGauche
-  146 00000070 4F41            ldr              r7, = GPIO_PORTD_BASE + (BROCHE
+  137 00000060 F8D7 A000       ldr              r10,[r7]
+  138 00000064 F1BA 0F00       CMP              r10,#0x00
+  139 00000068 D1F9            BNE              ReadState
+  140 0000006A E032            B                checkAppuisLong
+  141 0000006C         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       ---------   
+  142 0000006C         DebutProgrammation
+  143 0000006C F000 F858       BL               Clignotement
+  144 00000070         ReadGauche
+  145 00000070 4F41            ldr              r7, = GPIO_PORTD_BASE + (BROCHE
 _6<<2) 
                                                             ; affectation du sw
                                                             itch 1 
-  147 00000072 F8D7 A000       ldr              r10,[r7]    ; lecture de l'état
+  146 00000072 F8D7 A000       ldr              r10,[r7]    ; lecture de l'état
                                                              du switch 1
-  148 00000076 F1BA 0F00       CMP              r10,#0x00   ; vérifier si c'est
+  147 00000076 F1BA 0F00       CMP              r10,#0x00   ; vérifier si c'est
                                                              appuyé
-  149 0000007A D108            BNE              ReadDroit   ; on  branche vers 
+  148 0000007A D108            BNE              ReadDroit   ; on  branche vers 
                                                             le switch1( gauche)
                                                              pour tester  si ja
                                                             mais le droit n'est
                                                              pas appuyé 
-  150 0000007C E034            B                checkAppuisLongGauche ; on véri
+  149 0000007C E034            B                checkAppuisLongGauche ; on véri
                                                             fie si l'appuis est
                                                              long
+  150 0000007E         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       ---------
   151 0000007E         appuisCourtGauche
   152 0000007E         ; on allume la led gauche pour signaler le clic 
   153 0000007E F04F 0310       mov              r3, #BROCHE_4
@@ -312,58 +316,66 @@ _4<<2)
   158 00000088 F04F 0A01       mov              r10,#1      ; 1 pour  gauche 
   159 0000008C E01C            B                ecrireDirection ; écrir dans bu
                                                             ffer la direction 
-  160 0000008E         
+  160 0000008E         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       ---------
   161 0000008E         ReadDroit
   162 0000008E 4F3C            ldr              r7, = GPIO_PORTD_BASE + (BROCHE
 _7<<2)
   163 00000090 F8D7 A000       ldr              r10,[r7]
-  164 00000094 F1BA 0F00       CMP              r10,#0x00
-  165 00000098 D1EA            BNE              ReadGauche
-  166 0000009A E030            B                checkAppuisLongDroit ; on vérif
-                                                            i si l'appuis est l
-                                                            ong ou court
-  167 0000009C         appuisCourtDroit                     ; si on arrive à ce
 
 
 
 ARM Macro Assembler    Page 6 
 
 
+  164 00000094 F1BA 0F00       CMP              r10,#0x00
+  165 00000098 D1EA            BNE              ReadGauche
+  166 0000009A E030            B                checkAppuisLongDroit ; on vérif
+                                                            i si l'appuis est l
+                                                            ong ou court
+  167 0000009C         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       ---------
+  168 0000009C         appuisCourtDroit                     ; si on arrive à ce
                                                             tte étiquette alors
                                                              l'appuis est court
                                                             
-  168 0000009C         ; on allume la led droite pour signaler le clic 
-  169 0000009C F04F 0320       mov              r3, #BROCHE_5
-  170 000000A0 4E38            ldr              r6, = GPIO_PORTF_BASE + (BROCHE
+  169 0000009C         ; on allume la led droite pour signaler le clic 
+  170 0000009C F04F 0320       mov              r3, #BROCHE_5
+  171 000000A0 4E38            ldr              r6, = GPIO_PORTF_BASE + (BROCHE
 _5<<2)
-  171 000000A2 F000 F837       BL               clignoteAuClic 
+  172 000000A2 F000 F837       BL               clignoteAuClic 
                                                             ; gère l'allumage
-  172 000000A6         
-  173 000000A6         ; on définit l'entier correspondant à la direction gauch
+  173 000000A6         
+  174 000000A6         ; on définit l'entier correspondant à la direction gauch
                        e 
-  174 000000A6 F04F 0A02       mov              r10,#2      ; 2 pour  droite 
-  175 000000AA E00D            B                ecrireDirection ; écrir dans ta
+  175 000000A6 F04F 0A02       mov              r10,#2      ; 2 pour  droite 
+  176 000000AA E00D            B                ecrireDirection ; écrir dans ta
                                                             bleau la direction 
                                                             
-  176 000000AC         
-  177 000000AC         FinProgrammation                     ; le programme est 
+  177 000000AC         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       ---------
+  178 000000AC         FinProgrammation                     ; le programme est 
                                                             enregistré maintema
                                                             nt on peut parcouri
                                                             r le labyrinthe
-  178 000000AC         ; on on clignote pour signaler fin de la programmation 
-  179 000000AC F04F 0330       mov              r3, #BROCHE4_5
-  180 000000B0 4E30            ldr              r6, = GPIO_PORTF_BASE + (BROCHE
+  179 000000AC         ; on on clignote pour signaler fin de la programmation 
+  180 000000AC F04F 0330       mov              r3, #BROCHE4_5
+  181 000000B0 4E30            ldr              r6, = GPIO_PORTF_BASE + (BROCHE
 4_5<<2)
-  181 000000B2 F000 F835       BL               Clignotement
-  182 000000B6         
-  183 000000B6         debut
-  184 000000B6         ; Activer les deux moteurs droit et gauche
-  185 000000B6 F7FF FFFE       BL               MOTEUR_DROIT_ON
-  186 000000BA F7FF FFFE       BL               MOTEUR_GAUCHE_ON
-  187 000000BE         ; Evalbot avance droit devant
-  188 000000BE F7FF FFFE       BL               MOTEUR_DROIT_AVANT
-  189 000000C2 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
-  190 000000C6         
+  182 000000B2 F000 F835       BL               Clignotement
+  183 000000B6         ;-------------------------------------------------------
+                       ----DEBUT DE PARCOURS-----------------------------------
+                       --------------------------  
+  184 000000B6         debut
+  185 000000B6         ; Activer les deux moteurs droit et gauche
+  186 000000B6 F7FF FFFE       BL               MOTEUR_DROIT_ON
+  187 000000BA F7FF FFFE       BL               MOTEUR_GAUCHE_ON
+  188 000000BE         ; Evalbot avance droit devant
+  189 000000BE F7FF FFFE       BL               MOTEUR_DROIT_AVANT
+  190 000000C2 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
   191 000000C6         
   192 000000C6         
   193 000000C6         
@@ -376,6 +388,12 @@ _5<<2)
   200 000000C6         
   201 000000C6         
   202 000000C6         
+
+
+
+ARM Macro Assembler    Page 7 
+
+
   203 000000C6         
   204 000000C6         
   205 000000C6         
@@ -385,16 +403,12 @@ _5<<2)
   209 000000C6         
   210 000000C6         
   211 000000C6         
-  212 000000C6 E7F6            b                debut
-  213 000000C8         
+  212 000000C6         
+  213 000000C6 E7F6            b                debut
   214 000000C8         
-
-
-
-ARM Macro Assembler    Page 7 
-
-
-  215 000000C8         
+  215 000000C8         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       ---------  
   216 000000C8         ecrireDirection
   217 000000C8 F809 A005       STRB             R10, [R9, R5] ; écrire dans le 
                                                             tableau à l'indice 
@@ -404,151 +418,163 @@ ARM Macro Assembler    Page 7
   219 000000D0 E7CE            B                ReadGauche  ; on retourne à la 
                                                             lecture des directi
                                                             on 
-  220 000000D2         
-  221 000000D2         
-  222 000000D2 F44F 217F 
+  220 000000D2         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       --------- 
+  221 000000D2 F44F 217F 
                        checkAppuisLong
                                ldr              r1, =0xFF000 ;  dureé R1 corres
                                                             pond à la duree de 
                                                             l'appuis long  envi
                                                             rion 2seconde
-  223 000000D6         wait0
-  224 000000D6 4F28            ldr              r7, = GPIO_PORTD_BASE + (BROCHE
+  222 000000D6         wait0
+  223 000000D6 4F28            ldr              r7, = GPIO_PORTD_BASE + (BROCHE
 _6<<2)
-  225 000000D8 F8D7 A000       ldr              r10,[r7]
-  226 000000DC F1BA 0F00       CMP              r10,#0x00
-  227 000000E0 D1BD            BNE              ReadState   ; si l'utilisateur 
+  224 000000D8 F8D7 A000       ldr              r10,[r7]
+  225 000000DC F1BA 0F00       CMP              r10,#0x00
+  226 000000E0 D1BD            BNE              ReadState   ; si l'utilisateur 
                                                             relâche pendant le 
                                                             wait  c'est à dire 
                                                              r10=0x01 , on reco
                                                             mmence 
-  228 000000E2 3901            subs             r1, #1
-  229 000000E4 D1F7            bne              wait0
-  230 000000E6 E7C1            B                Debut
-  231 000000E8         
-  232 000000E8         
-  233 000000E8         checkAppuisLongGauche
-  234 000000E8 F44F 217F       ldr              r1, =0xFF000 ; R1 correspond à 
+  227 000000E2 3901            subs             r1, #1
+  228 000000E4 D1F7            bne              wait0
+  229 000000E6 E7C1            B                DebutProgrammation
+  230 000000E8         
+  231 000000E8         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       ---------
+  232 000000E8         checkAppuisLongGauche
+  233 000000E8 F44F 217F       ldr              r1, =0xFF000 ; R1 correspond à 
                                                             la duree de l'appui
                                                             s long 
-  235 000000EC         wait01
-  236 000000EC 4F22            ldr              r7, = GPIO_PORTD_BASE + (BROCHE
+  234 000000EC         wait01
+  235 000000EC 4F22            ldr              r7, = GPIO_PORTD_BASE + (BROCHE
 _6<<2)
-  237 000000EE F8D7 A000       ldr              r10,[r7]
-  238 000000F2 F1BA 0F00       CMP              r10,#0x00
-  239 000000F6 D1C2            BNE              appuisCourtGauche ; si l'utilis
-                                                            ateur relâche penda
-                                                            nt le wait  c'est-à
-                                                            -dire  r10=0x01 , c
-                                                            'est un appuis cour
-                                                            t sur gauche 
-  240 000000F8 3901            subs             r1, #1      ; sinon on continue
-                                                             de lire dans que d
-                                                            urée n'est pas acro
-                                                            ulé
-  241 000000FA D1F7            bne              wait01
-  242 000000FC E7D6            B                FinProgrammation ; si on arrive
-                                                             ici alor l'appuis 
-                                                            est long donc c'est
-                                                             la fin de la progr
-                                                            ammation 
-  243 000000FE         
+  236 000000EE F8D7 A000       ldr              r10,[r7]
+  237 000000F2 F1BA 0F00       CMP              r10,#0x00
 
 
 
 ARM Macro Assembler    Page 8 
 
 
-  244 000000FE         checkAppuisLongDroit
-  245 000000FE F44F 217F       ldr              r1, =0xFF000 ; correspond à la 
+  238 000000F6 D1C2            BNE              appuisCourtGauche ; si l'utilis
+                                                            ateur relâche penda
+                                                            nt le wait  c'est-à
+                                                            -dire  r10=0x01 , c
+                                                            'est un appuis cour
+                                                            t sur gauche 
+  239 000000F8 3901            subs             r1, #1      ; sinon on continue
+                                                             de lire dans que d
+                                                            urée n'est pas acro
+                                                            ulé
+  240 000000FA D1F7            bne              wait01
+  241 000000FC E7D6            B                FinProgrammation ; si on arrive
+                                                             ici alor l'appuis 
+                                                            est long donc c'est
+                                                             la fin de la progr
+                                                            ammation 
+  242 000000FE         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       ---------
+  243 000000FE         checkAppuisLongDroit
+  244 000000FE F44F 217F       ldr              r1, =0xFF000 ; correspond à la 
                                                             duree de l'appuis l
                                                             ong 
-  246 00000102         wait02
-  247 00000102 4F1F            ldr              r7, = GPIO_PORTD_BASE + (BROCHE
+  245 00000102         wait02
+  246 00000102 4F1F            ldr              r7, = GPIO_PORTD_BASE + (BROCHE
 _7<<2)
-  248 00000104 F8D7 A000       ldr              r10,[r7]
-  249 00000108 F1BA 0F00       CMP              r10,#0x00
-  250 0000010C D1C6            BNE              appuisCourtDroit ; si l'utilisa
+  247 00000104 F8D7 A000       ldr              r10,[r7]
+  248 00000108 F1BA 0F00       CMP              r10,#0x00
+  249 0000010C D1C6            BNE              appuisCourtDroit ; si l'utilisa
                                                             teur relâche pendan
                                                             t le wait  c'est-à-
                                                             dire r10=0x01 , c'e
                                                             st un appuis court 
                                                             sur droit
-  251 0000010E 3901            subs             r1, #1
-  252 00000110 D1F7            bne              wait02
-  253 00000112 E7CB            B                FinProgrammation
-  254 00000114         
-  255 00000114         
-  256 00000114         ; logique du clignote simple  à chaque touche 
-  257 00000114         clignoteAuClic
-  258 00000114 491C            ldr              r1, =0xFFFFF ; durée d'allumage
+  250 0000010E 3901            subs             r1, #1
+  251 00000110 D1F7            bne              wait02
+  252 00000112 E7CB            B                FinProgrammation
+  253 00000114         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       ---------
+  254 00000114         ; logique du clignote simple  à chaque touche 
+  255 00000114         clignoteAuClic
+  256 00000114 491C            ldr              r1, =0xFFFFF ; durée d'allumage
                                                             
-  259 00000116 6033            str              r3, [r6]    ; allumer la led co
+  257 00000116 6033            str              r3, [r6]    ; allumer la led co
                                                             rrespondant dans R3
                                                             
-  260 00000118 3901    wait21  subs             r1, #1
-  261 0000011A D1FD            bne              wait21
-  262 0000011C 6032            str              r2, [r6]    ;; Eteint LED car r
+  258 00000118 3901    wait21  subs             r1, #1
+  259 0000011A D1FD            bne              wait21
+  260 0000011C 6032            str              r2, [r6]    ;; Eteint LED car r
                                                             2 = 0x00      
-  263 0000011E 4770            BX               LR          ;; retour à l'endro
+  261 0000011E 4770            BX               LR          ;; retour à l'endro
                                                             it ou clignoteAuCli
                                                             c est appeler 
-  264 00000120         
-  265 00000120         ; logique de clignotement multiple   avant et apprès le 
+  262 00000120         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       ---------
+  263 00000120         ; logique de clignotement multiple   avant et apprès le 
                        programmation 
-  266 00000120         Clignotement
-  267 00000120 F04F 0408       ldr              r4, =0x8    ; durée de clignote
-                                                            ment
-  268 00000124         
-  269 00000124 6033            str              r3, [r6]    ;; Allume LED1&2 po
-                                                            rtF broche 4&5 : 00
-                                                            110000 (contenu de 
-                                                            r3)
-  270 00000126         loop
-  271 00000126 6032            str              r2, [r6]    ;; Eteint LED car r
-                                                            2 = 0x00      
-  272 00000128 F44F 2100       ldr              r1, = DUREE ;; pour la duree de
-                                                             la boucle d'attent
-                                                            e1 (wait1)
-  273 0000012C         
-  274 0000012C 3901    wait1   subs             r1, #1
-  275 0000012E D1FD            bne              wait1
-  276 00000130         
-  277 00000130 6033            str              r3, [r6]    ;; Allume LED1&2 po
-                                                            rtF broche 4&5 : 00
-                                                            110000 (contenu de 
-                                                            r3)
 
 
 
 ARM Macro Assembler    Page 9 
 
 
-  278 00000132 F44F 2100       ldr              r1, = DUREE ;; pour la duree de
+  264 00000120         Clignotement
+  265 00000120 F04F 0408       ldr              r4, =0x8    ; durée de clignote
+                                                            ment
+  266 00000124         
+  267 00000124 6033            str              r3, [r6]    ;; Allume LED1&2 po
+                                                            rtF broche 4&5 : 00
+                                                            110000 (contenu de 
+                                                            r3)
+  268 00000126         loop
+  269 00000126 6032            str              r2, [r6]    ;; Eteint LED car r
+                                                            2 = 0x00      
+  270 00000128 F44F 2100       ldr              r1, = DUREE ;; pour la duree de
+                                                             la boucle d'attent
+                                                            e1 (wait1)
+  271 0000012C         
+  272 0000012C 3901    wait1   subs             r1, #1
+  273 0000012E D1FD            bne              wait1
+  274 00000130         
+  275 00000130 6033            str              r3, [r6]    ;; Allume LED1&2 po
+                                                            rtF broche 4&5 : 00
+                                                            110000 (contenu de 
+                                                            r3)
+  276 00000132 F44F 2100       ldr              r1, = DUREE ;; pour la duree de
                                                              la boucle d'attent
                                                             e2 (wait2)
-  279 00000136         
-  280 00000136 3901    wait2   subs             r1, #1
-  281 00000138 D1FD            bne              wait2
-  282 0000013A         
-  283 0000013A 3C01            subs             r4, #1      ; contrôle le temp 
+  277 00000136         
+  278 00000136 3901    wait2   subs             r1, #1
+  279 00000138 D1FD            bne              wait2
+  280 0000013A         
+  281 0000013A 3C01            subs             r4, #1      ; contrôle le temp 
                                                             de clignotement 
-  284 0000013C D1F3            bne              loop
-  285 0000013E         
-  286 0000013E 6032            str              r2, [r6]    ;; Eteint LED car r
+  282 0000013C D1F3            bne              loop
+  283 0000013E         
+  284 0000013E 6032            str              r2, [r6]    ;; Eteint LED car r
                                                             2 = 0x00      
-  287 00000140 4770            BX               LR
-  288 00000142         
-  289 00000142         ;; Boucle d'attente   simple  sans rien faire 
-  290 00000142 F44F 21A4 
+  285 00000140 4770            BX               LR
+  286 00000142         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       ---------
+  287 00000142         ;; Boucle d'attente   simple  sans rien faire 
+  288 00000142 F44F 21A4 
                        WAIT    ldr              r1, =0x052000
-  291 00000146 3901    wait3   subs             r1, #1
-  292 00000148 D1FD            bne              wait3
-  293 0000014A 4770            BX               LR
-  294 0000014C         
-  295 0000014C BF00            NOP
-  296 0000014E         
-  297 0000014E 00 00 00000000 
+  289 00000146 3901    wait3   subs             r1, #1
+  290 00000148 D1FD            bne              wait3
+  291 0000014A 4770            BX               LR
+  292 0000014C         ;-------------------------------------------------------
+                       --------------------------------------------------------
+                       ---------
+  293 0000014C BF00            NOP
+  294 0000014E         
+  295 0000014E 00 00 00000000 
               400FE108 
               40025400 
               4002551C 
@@ -557,13 +583,19 @@ ARM Macro Assembler    Page 9
               4002451C 
               40007510 
               4000751C 
+
+
+
+ARM Macro Assembler    Page 10 
+
+
               400250C0 
               40007100 
               40025040 
               40007200 
               40025080 
               000FFFFF         AREA             |variable|, DATA, READWRITE
-  298 00000000 00 00 00 
+  296 00000000 00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
@@ -582,13 +614,7 @@ ARM Macro Assembler    Page 9
               00 00    buffer  space            50          ;   tableau de 50 o
                                                             ctets pour contenir
                                                              les instructions 
-  299 00000032                 END
-
-
-
-ARM Macro Assembler    Page 10 
-
-
+  297 00000032                 END
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
 ork --depend=.\objects\rk_priseenmain_moteurs.d -o.\objects\rk_priseenmain_mote
 urs.o -I.\RTE\_Target_1 -IC:\Users\maglo\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.
@@ -615,27 +641,27 @@ Clignotement 00000120
 
 Symbol: Clignotement
    Definitions
-      At line 266 in file RK_PriseEnMain_Moteurs.s
+      At line 264 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 139 in file RK_PriseEnMain_Moteurs.s
-      At line 181 in file RK_PriseEnMain_Moteurs.s
+      At line 143 in file RK_PriseEnMain_Moteurs.s
+      At line 182 in file RK_PriseEnMain_Moteurs.s
 
-Debut 0000006C
+DebutProgrammation 0000006C
 
-Symbol: Debut
+Symbol: DebutProgrammation
    Definitions
-      At line 138 in file RK_PriseEnMain_Moteurs.s
+      At line 142 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 230 in file RK_PriseEnMain_Moteurs.s
-Comment: Debut used once
+      At line 229 in file RK_PriseEnMain_Moteurs.s
+Comment: DebutProgrammation used once
 FinProgrammation 000000AC
 
 Symbol: FinProgrammation
    Definitions
-      At line 177 in file RK_PriseEnMain_Moteurs.s
+      At line 178 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 242 in file RK_PriseEnMain_Moteurs.s
-      At line 253 in file RK_PriseEnMain_Moteurs.s
+      At line 241 in file RK_PriseEnMain_Moteurs.s
+      At line 252 in file RK_PriseEnMain_Moteurs.s
 
 ReadDroit 0000008E
 
@@ -643,13 +669,13 @@ Symbol: ReadDroit
    Definitions
       At line 161 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 149 in file RK_PriseEnMain_Moteurs.s
+      At line 148 in file RK_PriseEnMain_Moteurs.s
 Comment: ReadDroit used once
 ReadGauche 00000070
 
 Symbol: ReadGauche
    Definitions
-      At line 145 in file RK_PriseEnMain_Moteurs.s
+      At line 144 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 165 in file RK_PriseEnMain_Moteurs.s
       At line 219 in file RK_PriseEnMain_Moteurs.s
@@ -658,10 +684,10 @@ ReadState 0000005E
 
 Symbol: ReadState
    Definitions
-      At line 132 in file RK_PriseEnMain_Moteurs.s
+      At line 135 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 136 in file RK_PriseEnMain_Moteurs.s
-      At line 227 in file RK_PriseEnMain_Moteurs.s
+      At line 139 in file RK_PriseEnMain_Moteurs.s
+      At line 226 in file RK_PriseEnMain_Moteurs.s
 
 
 
@@ -673,7 +699,7 @@ WAIT 00000142
 
 Symbol: WAIT
    Definitions
-      At line 290 in file RK_PriseEnMain_Moteurs.s
+      At line 288 in file RK_PriseEnMain_Moteurs.s
    Uses
       None
 Comment: WAIT unused
@@ -681,17 +707,17 @@ __main 00000000
 
 Symbol: __main
    Definitions
-      At line 69 in file RK_PriseEnMain_Moteurs.s
+      At line 72 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 54 in file RK_PriseEnMain_Moteurs.s
+      At line 57 in file RK_PriseEnMain_Moteurs.s
 Comment: __main used once
 appuisCourtDroit 0000009C
 
 Symbol: appuisCourtDroit
    Definitions
-      At line 167 in file RK_PriseEnMain_Moteurs.s
+      At line 168 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 250 in file RK_PriseEnMain_Moteurs.s
+      At line 249 in file RK_PriseEnMain_Moteurs.s
 Comment: appuisCourtDroit used once
 appuisCourtGauche 0000007E
 
@@ -699,21 +725,21 @@ Symbol: appuisCourtGauche
    Definitions
       At line 151 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 239 in file RK_PriseEnMain_Moteurs.s
+      At line 238 in file RK_PriseEnMain_Moteurs.s
 Comment: appuisCourtGauche used once
 checkAppuisLong 000000D2
 
 Symbol: checkAppuisLong
    Definitions
-      At line 222 in file RK_PriseEnMain_Moteurs.s
+      At line 221 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 137 in file RK_PriseEnMain_Moteurs.s
+      At line 140 in file RK_PriseEnMain_Moteurs.s
 Comment: checkAppuisLong used once
 checkAppuisLongDroit 000000FE
 
 Symbol: checkAppuisLongDroit
    Definitions
-      At line 244 in file RK_PriseEnMain_Moteurs.s
+      At line 243 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 166 in file RK_PriseEnMain_Moteurs.s
 Comment: checkAppuisLongDroit used once
@@ -721,9 +747,9 @@ checkAppuisLongGauche 000000E8
 
 Symbol: checkAppuisLongGauche
    Definitions
-      At line 233 in file RK_PriseEnMain_Moteurs.s
+      At line 232 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 150 in file RK_PriseEnMain_Moteurs.s
+      At line 149 in file RK_PriseEnMain_Moteurs.s
 Comment: checkAppuisLongGauche used once
 clignoteAuClic 00000114
 
@@ -735,27 +761,19 @@ Relocatable symbols
 
 Symbol: clignoteAuClic
    Definitions
-      At line 257 in file RK_PriseEnMain_Moteurs.s
+      At line 255 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 155 in file RK_PriseEnMain_Moteurs.s
-      At line 171 in file RK_PriseEnMain_Moteurs.s
+      At line 172 in file RK_PriseEnMain_Moteurs.s
 
 debut 000000B6
 
 Symbol: debut
    Definitions
-      At line 183 in file RK_PriseEnMain_Moteurs.s
+      At line 184 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 212 in file RK_PriseEnMain_Moteurs.s
+      At line 213 in file RK_PriseEnMain_Moteurs.s
 Comment: debut used once
-debutLectureProgramme 00000070
-
-Symbol: debutLectureProgramme
-   Definitions
-      At line 144 in file RK_PriseEnMain_Moteurs.s
-   Uses
-      None
-Comment: debutLectureProgramme unused
 ecrireDirection 000000C8
 
 Symbol: ecrireDirection
@@ -763,35 +781,43 @@ Symbol: ecrireDirection
       At line 216 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 159 in file RK_PriseEnMain_Moteurs.s
-      At line 175 in file RK_PriseEnMain_Moteurs.s
+      At line 176 in file RK_PriseEnMain_Moteurs.s
 
 loop 00000126
 
 Symbol: loop
    Definitions
-      At line 270 in file RK_PriseEnMain_Moteurs.s
+      At line 268 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 284 in file RK_PriseEnMain_Moteurs.s
+      At line 282 in file RK_PriseEnMain_Moteurs.s
 Comment: loop used once
 wait0 000000D6
 
 Symbol: wait0
    Definitions
-      At line 223 in file RK_PriseEnMain_Moteurs.s
+      At line 222 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 229 in file RK_PriseEnMain_Moteurs.s
+      At line 228 in file RK_PriseEnMain_Moteurs.s
 Comment: wait0 used once
 wait01 000000EC
 
 Symbol: wait01
    Definitions
-      At line 235 in file RK_PriseEnMain_Moteurs.s
+      At line 234 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 241 in file RK_PriseEnMain_Moteurs.s
+      At line 240 in file RK_PriseEnMain_Moteurs.s
 Comment: wait01 used once
 wait02 00000102
 
 Symbol: wait02
+   Definitions
+      At line 245 in file RK_PriseEnMain_Moteurs.s
+   Uses
+      At line 251 in file RK_PriseEnMain_Moteurs.s
+Comment: wait02 used once
+wait1 0000012C
+
+Symbol: wait1
 
 
 
@@ -799,43 +825,35 @@ ARM Macro Assembler    Page 4 Alphabetic symbol ordering
 Relocatable symbols
 
    Definitions
-      At line 246 in file RK_PriseEnMain_Moteurs.s
+      At line 272 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 252 in file RK_PriseEnMain_Moteurs.s
-Comment: wait02 used once
-wait1 0000012C
-
-Symbol: wait1
-   Definitions
-      At line 274 in file RK_PriseEnMain_Moteurs.s
-   Uses
-      At line 275 in file RK_PriseEnMain_Moteurs.s
+      At line 273 in file RK_PriseEnMain_Moteurs.s
 Comment: wait1 used once
 wait2 00000136
 
 Symbol: wait2
    Definitions
-      At line 280 in file RK_PriseEnMain_Moteurs.s
+      At line 278 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 281 in file RK_PriseEnMain_Moteurs.s
+      At line 279 in file RK_PriseEnMain_Moteurs.s
 Comment: wait2 used once
 wait21 00000118
 
 Symbol: wait21
    Definitions
-      At line 260 in file RK_PriseEnMain_Moteurs.s
+      At line 258 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 261 in file RK_PriseEnMain_Moteurs.s
+      At line 259 in file RK_PriseEnMain_Moteurs.s
 Comment: wait21 used once
 wait3 00000146
 
 Symbol: wait3
    Definitions
-      At line 291 in file RK_PriseEnMain_Moteurs.s
+      At line 289 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 292 in file RK_PriseEnMain_Moteurs.s
+      At line 290 in file RK_PriseEnMain_Moteurs.s
 Comment: wait3 used once
-26 symbols
+25 symbols
 
 
 
@@ -846,15 +864,15 @@ buffer 00000000
 
 Symbol: buffer
    Definitions
-      At line 298 in file RK_PriseEnMain_Moteurs.s
+      At line 296 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 71 in file RK_PriseEnMain_Moteurs.s
+      At line 74 in file RK_PriseEnMain_Moteurs.s
 Comment: buffer used once
 variable 00000000
 
 Symbol: variable
    Definitions
-      At line 297 in file RK_PriseEnMain_Moteurs.s
+      At line 295 in file RK_PriseEnMain_Moteurs.s
    Uses
       None
 Comment: variable unused
@@ -879,8 +897,8 @@ Symbol: BROCHE0_1
    Definitions
       At line 40 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 101 in file RK_PriseEnMain_Moteurs.s
-      At line 105 in file RK_PriseEnMain_Moteurs.s
+      At line 104 in file RK_PriseEnMain_Moteurs.s
+      At line 108 in file RK_PriseEnMain_Moteurs.s
 
 BROCHE1 00000002
 
@@ -896,13 +914,13 @@ Symbol: BROCHE4_5
    Definitions
       At line 36 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 89 in file RK_PriseEnMain_Moteurs.s
-      At line 93 in file RK_PriseEnMain_Moteurs.s
-      At line 97 in file RK_PriseEnMain_Moteurs.s
-      At line 127 in file RK_PriseEnMain_Moteurs.s
-      At line 128 in file RK_PriseEnMain_Moteurs.s
-      At line 179 in file RK_PriseEnMain_Moteurs.s
+      At line 92 in file RK_PriseEnMain_Moteurs.s
+      At line 96 in file RK_PriseEnMain_Moteurs.s
+      At line 100 in file RK_PriseEnMain_Moteurs.s
+      At line 130 in file RK_PriseEnMain_Moteurs.s
+      At line 131 in file RK_PriseEnMain_Moteurs.s
       At line 180 in file RK_PriseEnMain_Moteurs.s
+      At line 181 in file RK_PriseEnMain_Moteurs.s
 
 BROCHE6_7 000000C0
 
@@ -910,8 +928,8 @@ Symbol: BROCHE6_7
    Definitions
       At line 44 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 109 in file RK_PriseEnMain_Moteurs.s
-      At line 113 in file RK_PriseEnMain_Moteurs.s
+      At line 112 in file RK_PriseEnMain_Moteurs.s
+      At line 116 in file RK_PriseEnMain_Moteurs.s
 
 BROCHE_4 00000010
 
@@ -934,8 +952,8 @@ Symbol: BROCHE_5
    Definitions
       At line 35 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 169 in file RK_PriseEnMain_Moteurs.s
       At line 170 in file RK_PriseEnMain_Moteurs.s
+      At line 171 in file RK_PriseEnMain_Moteurs.s
 
 BROCHE_6 00000040
 
@@ -943,10 +961,10 @@ Symbol: BROCHE_6
    Definitions
       At line 42 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 133 in file RK_PriseEnMain_Moteurs.s
-      At line 146 in file RK_PriseEnMain_Moteurs.s
-      At line 224 in file RK_PriseEnMain_Moteurs.s
-      At line 236 in file RK_PriseEnMain_Moteurs.s
+      At line 136 in file RK_PriseEnMain_Moteurs.s
+      At line 145 in file RK_PriseEnMain_Moteurs.s
+      At line 223 in file RK_PriseEnMain_Moteurs.s
+      At line 235 in file RK_PriseEnMain_Moteurs.s
 
 BROCHE_7 00000080
 
@@ -955,7 +973,7 @@ Symbol: BROCHE_7
       At line 43 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 162 in file RK_PriseEnMain_Moteurs.s
-      At line 247 in file RK_PriseEnMain_Moteurs.s
+      At line 246 in file RK_PriseEnMain_Moteurs.s
 
 DUREE 00080000
 
@@ -963,8 +981,8 @@ Symbol: DUREE
    Definitions
       At line 46 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 272 in file RK_PriseEnMain_Moteurs.s
-      At line 278 in file RK_PriseEnMain_Moteurs.s
+      At line 270 in file RK_PriseEnMain_Moteurs.s
+      At line 276 in file RK_PriseEnMain_Moteurs.s
 
 GPIO_I_PUR 00000510
 
@@ -972,8 +990,8 @@ Symbol: GPIO_I_PUR
    Definitions
       At line 30 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 100 in file RK_PriseEnMain_Moteurs.s
-      At line 108 in file RK_PriseEnMain_Moteurs.s
+      At line 103 in file RK_PriseEnMain_Moteurs.s
+      At line 111 in file RK_PriseEnMain_Moteurs.s
 
 GPIO_O_DEN 0000051C
 
@@ -981,9 +999,9 @@ Symbol: GPIO_O_DEN
    Definitions
       At line 27 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 92 in file RK_PriseEnMain_Moteurs.s
-      At line 104 in file RK_PriseEnMain_Moteurs.s
-      At line 112 in file RK_PriseEnMain_Moteurs.s
+      At line 95 in file RK_PriseEnMain_Moteurs.s
+      At line 107 in file RK_PriseEnMain_Moteurs.s
+      At line 115 in file RK_PriseEnMain_Moteurs.s
 
 GPIO_O_DIR 00000400
 
@@ -997,7 +1015,7 @@ Absolute symbols
 
       At line 19 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 88 in file RK_PriseEnMain_Moteurs.s
+      At line 91 in file RK_PriseEnMain_Moteurs.s
 Comment: GPIO_O_DIR used once
 GPIO_O_DR2R 00000500
 
@@ -1005,7 +1023,7 @@ Symbol: GPIO_O_DR2R
    Definitions
       At line 23 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 96 in file RK_PriseEnMain_Moteurs.s
+      At line 99 in file RK_PriseEnMain_Moteurs.s
 Comment: GPIO_O_DR2R used once
 GPIO_PORTD_BASE 40007000
 
@@ -1013,14 +1031,14 @@ Symbol: GPIO_PORTD_BASE
    Definitions
       At line 16 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 108 in file RK_PriseEnMain_Moteurs.s
-      At line 112 in file RK_PriseEnMain_Moteurs.s
-      At line 133 in file RK_PriseEnMain_Moteurs.s
-      At line 146 in file RK_PriseEnMain_Moteurs.s
+      At line 111 in file RK_PriseEnMain_Moteurs.s
+      At line 115 in file RK_PriseEnMain_Moteurs.s
+      At line 136 in file RK_PriseEnMain_Moteurs.s
+      At line 145 in file RK_PriseEnMain_Moteurs.s
       At line 162 in file RK_PriseEnMain_Moteurs.s
-      At line 224 in file RK_PriseEnMain_Moteurs.s
-      At line 236 in file RK_PriseEnMain_Moteurs.s
-      At line 247 in file RK_PriseEnMain_Moteurs.s
+      At line 223 in file RK_PriseEnMain_Moteurs.s
+      At line 235 in file RK_PriseEnMain_Moteurs.s
+      At line 246 in file RK_PriseEnMain_Moteurs.s
 
 GPIO_PORTE_BASE 40024000
 
@@ -1028,8 +1046,8 @@ Symbol: GPIO_PORTE_BASE
    Definitions
       At line 14 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 100 in file RK_PriseEnMain_Moteurs.s
-      At line 104 in file RK_PriseEnMain_Moteurs.s
+      At line 103 in file RK_PriseEnMain_Moteurs.s
+      At line 107 in file RK_PriseEnMain_Moteurs.s
 
 GPIO_PORTF_BASE 40025000
 
@@ -1037,13 +1055,13 @@ Symbol: GPIO_PORTF_BASE
    Definitions
       At line 12 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 88 in file RK_PriseEnMain_Moteurs.s
-      At line 92 in file RK_PriseEnMain_Moteurs.s
-      At line 96 in file RK_PriseEnMain_Moteurs.s
-      At line 128 in file RK_PriseEnMain_Moteurs.s
+      At line 91 in file RK_PriseEnMain_Moteurs.s
+      At line 95 in file RK_PriseEnMain_Moteurs.s
+      At line 99 in file RK_PriseEnMain_Moteurs.s
+      At line 131 in file RK_PriseEnMain_Moteurs.s
       At line 154 in file RK_PriseEnMain_Moteurs.s
-      At line 170 in file RK_PriseEnMain_Moteurs.s
-      At line 180 in file RK_PriseEnMain_Moteurs.s
+      At line 171 in file RK_PriseEnMain_Moteurs.s
+      At line 181 in file RK_PriseEnMain_Moteurs.s
 
 SYSCTL_PERIPH_GPIO 400FE108
 
@@ -1051,7 +1069,7 @@ Symbol: SYSCTL_PERIPH_GPIO
    Definitions
       At line 9 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 76 in file RK_PriseEnMain_Moteurs.s
+      At line 79 in file RK_PriseEnMain_Moteurs.s
 Comment: SYSCTL_PERIPH_GPIO used once
 18 symbols
 
@@ -1064,7 +1082,7 @@ MOTEUR_DROIT_ARRIERE 00000000
 
 Symbol: MOTEUR_DROIT_ARRIERE
    Definitions
-      At line 61 in file RK_PriseEnMain_Moteurs.s
+      At line 64 in file RK_PriseEnMain_Moteurs.s
    Uses
       None
 Comment: MOTEUR_DROIT_ARRIERE unused
@@ -1072,15 +1090,15 @@ MOTEUR_DROIT_AVANT 00000000
 
 Symbol: MOTEUR_DROIT_AVANT
    Definitions
-      At line 60 in file RK_PriseEnMain_Moteurs.s
+      At line 63 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 188 in file RK_PriseEnMain_Moteurs.s
+      At line 189 in file RK_PriseEnMain_Moteurs.s
 Comment: MOTEUR_DROIT_AVANT used once
 MOTEUR_DROIT_INVERSE 00000000
 
 Symbol: MOTEUR_DROIT_INVERSE
    Definitions
-      At line 62 in file RK_PriseEnMain_Moteurs.s
+      At line 65 in file RK_PriseEnMain_Moteurs.s
    Uses
       None
 Comment: MOTEUR_DROIT_INVERSE unused
@@ -1088,7 +1106,7 @@ MOTEUR_DROIT_OFF 00000000
 
 Symbol: MOTEUR_DROIT_OFF
    Definitions
-      At line 59 in file RK_PriseEnMain_Moteurs.s
+      At line 62 in file RK_PriseEnMain_Moteurs.s
    Uses
       None
 Comment: MOTEUR_DROIT_OFF unused
@@ -1096,15 +1114,15 @@ MOTEUR_DROIT_ON 00000000
 
 Symbol: MOTEUR_DROIT_ON
    Definitions
-      At line 58 in file RK_PriseEnMain_Moteurs.s
+      At line 61 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 185 in file RK_PriseEnMain_Moteurs.s
+      At line 186 in file RK_PriseEnMain_Moteurs.s
 Comment: MOTEUR_DROIT_ON used once
 MOTEUR_GAUCHE_ARRIERE 00000000
 
 Symbol: MOTEUR_GAUCHE_ARRIERE
    Definitions
-      At line 67 in file RK_PriseEnMain_Moteurs.s
+      At line 70 in file RK_PriseEnMain_Moteurs.s
    Uses
       None
 Comment: MOTEUR_GAUCHE_ARRIERE unused
@@ -1112,9 +1130,9 @@ MOTEUR_GAUCHE_AVANT 00000000
 
 Symbol: MOTEUR_GAUCHE_AVANT
    Definitions
-      At line 66 in file RK_PriseEnMain_Moteurs.s
+      At line 69 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 189 in file RK_PriseEnMain_Moteurs.s
+      At line 190 in file RK_PriseEnMain_Moteurs.s
 Comment: MOTEUR_GAUCHE_AVANT used once
 MOTEUR_GAUCHE_INVERSE 00000000
 
@@ -1126,7 +1144,7 @@ ARM Macro Assembler    Page 2 Alphabetic symbol ordering
 External symbols
 
    Definitions
-      At line 68 in file RK_PriseEnMain_Moteurs.s
+      At line 71 in file RK_PriseEnMain_Moteurs.s
    Uses
       None
 Comment: MOTEUR_GAUCHE_INVERSE unused
@@ -1134,7 +1152,7 @@ MOTEUR_GAUCHE_OFF 00000000
 
 Symbol: MOTEUR_GAUCHE_OFF
    Definitions
-      At line 65 in file RK_PriseEnMain_Moteurs.s
+      At line 68 in file RK_PriseEnMain_Moteurs.s
    Uses
       None
 Comment: MOTEUR_GAUCHE_OFF unused
@@ -1142,17 +1160,17 @@ MOTEUR_GAUCHE_ON 00000000
 
 Symbol: MOTEUR_GAUCHE_ON
    Definitions
-      At line 64 in file RK_PriseEnMain_Moteurs.s
+      At line 67 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 186 in file RK_PriseEnMain_Moteurs.s
+      At line 187 in file RK_PriseEnMain_Moteurs.s
 Comment: MOTEUR_GAUCHE_ON used once
 MOTEUR_INIT 00000000
 
 Symbol: MOTEUR_INIT
    Definitions
-      At line 56 in file RK_PriseEnMain_Moteurs.s
+      At line 59 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 118 in file RK_PriseEnMain_Moteurs.s
+      At line 121 in file RK_PriseEnMain_Moteurs.s
 Comment: MOTEUR_INIT used once
 11 symbols
-394 symbols in table
+393 symbols in table
