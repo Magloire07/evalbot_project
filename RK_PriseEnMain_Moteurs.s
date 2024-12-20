@@ -52,7 +52,7 @@ DUREE   			EQU     0x80000  ; durée fréquence clignotement multiple
 ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 	    ;; registres utilisés 
 		;;---------------------------------------------
-		;;   R0  R1 R2  R3  R4  R5  R6  R7  R9 R10
+		;;   R0  R1 R2  R3  R4  R5  R6  R7 R8  R9 R10
 		;;---------------------------------------------
 	    ;; registres réservés 
 		;;---------------------------------------------
@@ -61,7 +61,7 @@ DUREE   			EQU     0x80000  ; durée fréquence clignotement multiple
 		;; usages courants des régistres
 		;;---------------------------------------
 		;; r3,r2,r6 pour lire les pins de leds et allumer puis éteindre
-		;;
+		;; r7,r8,r10 pour lire les pins des switchs et bumpers 
 ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 		ENTRY
 		EXPORT	__main		
@@ -187,14 +187,16 @@ FinProgrammation
 		 mov r3, #BROCHE4_5		
 		 ldr r6, = GPIO_PORTF_BASE + (BROCHE4_5<<2)
 		 BL Clignotement
-;---------------------------------------------------DEBUT DE PARCOURS DU LABYRINTHE-------------------------------------------------------------	 
-debut
+;---------------------------------------------------PARCOURS DU LABYRINTHE-------------------------------------------------------------	 
+parcours
 		 ; Activer les deux moteurs droit et gauche
 		 BL	MOTEUR_DROIT_ON
 		 BL	MOTEUR_GAUCHE_ON
 		 ; Evalbot avance droit devant
 		 BL	MOTEUR_DROIT_AVANT	   
 		 BL	MOTEUR_GAUCHE_AVANT
+		 
+         B testCollision 
 
 
 
@@ -216,8 +218,7 @@ debut
 
 
 
-
-        b debut	
+        b parcours
 ;-----------------------------------------------FIN PARCOURS DU LABYRINTHE-------------------------------------------------------------------------		
 
 ecrireDirection
@@ -273,7 +274,8 @@ wait21  subs r1, #1
 ; logique de clignotement multiple   avant et apprès le programmation 
 Clignotement 
 		ldr r4, =0x8                           ; durée de clignotement
-		
+		mov r3, #BROCHE4_5		
+		ldr r6, = GPIO_PORTF_BASE + (BROCHE4_5<<2)
         str r3, [r6]  							;; Allume LED1&2 portF broche 4&5 : 00110000 (contenu de r3)
 loop
         str r2, [r6]    						;; Eteint LED car r2 = 0x00      
@@ -299,7 +301,37 @@ WAIT	ldr r1, =0x052000
 wait3	subs r1, #1
         bne wait3
 		BX	LR
+;----------------------------------TEST DE COLLISION --------------------------------------------------------------------------------------
+
+testCollision
+		ldr r7, = GPIO_PORTE_BASE + (BROCHE0<<2) 
+		ldr r8, = GPIO_PORTE_BASE + (BROCHE1<<2)
+
+        ldr r10,[r8]        ; lecture de l'état du bp_0
+		ldr r4,[r7] 		 ; lecture de l'état du bp_1
+		CMP r10,#0x00
+		BNE  testBp1
+		BL   MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche
+		BL   MOTEUR_DROIT_OFF			; déactiver le moteur droit
+		BL   Clignotement               ; on clignote à chaque collision 
+
+		B    lectureMemoire
+
+
+testBp1 
+		CMP r4,#0x00
+		BNE parcours
+		BL  MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche
+		BL  MOTEUR_DROIT_OFF			; déactiver le moteur droit
+		BL  Clignotement			    ; on clignote à chaque collision
+
+		B    lectureMemoire
+;----------------------------------LECTURE  MEMOIRE --------------------------------------------------------------------------------------
+lectureMemoire
+
 ;--------------------------------------------------DECLARATION TABLEAU CONTENANT LE PROGRAMME ------------------------------------------------------------------------------
+
+
 		NOP
 		
     AREA |variable|, DATA, READWRITE   
