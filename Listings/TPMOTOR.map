@@ -41,10 +41,10 @@ Image Symbol Table
     RTE\Device\ARMCM3\startup_ARMCM3.s       0x00000000   Number         0  startup_armcm3.o ABSOLUTE
     RTE\Device\ARMCM3\system_ARMCM3.c        0x00000000   Number         0  system_armcm3.o ABSOLUTE
     RTE\\Device\\ARMCM3\\system_ARMCM3.c     0x00000000   Number         0  system_armcm3.o ABSOLUTE
-    .text                                    0x000003c0   Section      484  rk_config_moteur.o(.text)
-    .text                                    0x000005a4   Section      588  rk_priseenmain_moteurs.o(.text)
-    .text                                    0x000007f0   Section       56  startup_armcm3.o(.text)
-    i.SystemInit                             0x00000828   Section        0  system_armcm3.o(i.SystemInit)
+    .text                                    0x000003c0   Section      568  rk_config_moteur.o(.text)
+    .text                                    0x000005f8   Section      656  rk_priseenmain_moteurs.o(.text)
+    .text                                    0x00000888   Section       56  startup_armcm3.o(.text)
+    i.SystemInit                             0x000008c0   Section        0  system_armcm3.o(i.SystemInit)
     .data                                    0x20000000   Section        4  system_armcm3.o(.data)
     variable                                 0x20000004   Section       50  rk_priseenmain_moteurs.o(variable)
     buffer                                   0x20000004   Data          50  rk_priseenmain_moteurs.o(variable)
@@ -69,28 +69,33 @@ Image Symbol Table
     MOTEUR_GAUCHE_AVANT                      0x00000513   Thumb Code     0  rk_config_moteur.o(.text)
     MOTEUR_DROIT_INVERSE                     0x0000051d   Thumb Code     0  rk_config_moteur.o(.text)
     MOTEUR_GAUCHE_INVERSE                    0x00000529   Thumb Code     0  rk_config_moteur.o(.text)
-    __main                                   0x000005a5   Thumb Code     0  rk_priseenmain_moteurs.o(.text)
-    Reset_Handler                            0x000007f1   Thumb Code     8  startup_armcm3.o(.text)
-    NMI_Handler                              0x000007f9   Thumb Code     2  startup_armcm3.o(.text)
-    HardFault_Handler                        0x000007fb   Thumb Code     2  startup_armcm3.o(.text)
-    MemManage_Handler                        0x000007fd   Thumb Code     2  startup_armcm3.o(.text)
-    BusFault_Handler                         0x000007ff   Thumb Code     2  startup_armcm3.o(.text)
-    UsageFault_Handler                       0x00000801   Thumb Code     2  startup_armcm3.o(.text)
-    SVC_Handler                              0x00000803   Thumb Code     2  startup_armcm3.o(.text)
-    DebugMon_Handler                         0x00000805   Thumb Code     2  startup_armcm3.o(.text)
-    PendSV_Handler                           0x00000807   Thumb Code     2  startup_armcm3.o(.text)
-    SysTick_Handler                          0x00000809   Thumb Code     2  startup_armcm3.o(.text)
-    Interrupt0_Handler                       0x0000080b   Thumb Code     2  startup_armcm3.o(.text)
-    Interrupt1_Handler                       0x0000080d   Thumb Code     2  startup_armcm3.o(.text)
-    Interrupt2_Handler                       0x0000080f   Thumb Code     2  startup_armcm3.o(.text)
-    Interrupt3_Handler                       0x00000811   Thumb Code     2  startup_armcm3.o(.text)
-    Interrupt4_Handler                       0x00000813   Thumb Code     2  startup_armcm3.o(.text)
-    Interrupt5_Handler                       0x00000815   Thumb Code     2  startup_armcm3.o(.text)
-    Interrupt6_Handler                       0x00000817   Thumb Code     2  startup_armcm3.o(.text)
-    Interrupt7_Handler                       0x00000819   Thumb Code     2  startup_armcm3.o(.text)
-    Interrupt8_Handler                       0x0000081b   Thumb Code     2  startup_armcm3.o(.text)
-    Interrupt9_Handler                       0x0000081d   Thumb Code     2  startup_armcm3.o(.text)
-    SystemInit                               0x00000829   Thumb Code    14  system_armcm3.o(i.SystemInit)
+    MOTEUR_DROIT_MIN                         0x00000535   Thumb Code     0  rk_config_moteur.o(.text)
+    MOTEUR_GAUCHE_MIN                        0x00000547   Thumb Code     0  rk_config_moteur.o(.text)
+    MOTEUR_DROIT_MAX                         0x00000559   Thumb Code     0  rk_config_moteur.o(.text)
+    MOTEUR_GAUCHE_MAX                        0x0000056b   Thumb Code     0  rk_config_moteur.o(.text)
+    WAIT_MIN                                 0x0000057d   Thumb Code     0  rk_config_moteur.o(.text)
+    __main                                   0x000005f9   Thumb Code     0  rk_priseenmain_moteurs.o(.text)
+    Reset_Handler                            0x00000889   Thumb Code     8  startup_armcm3.o(.text)
+    NMI_Handler                              0x00000891   Thumb Code     2  startup_armcm3.o(.text)
+    HardFault_Handler                        0x00000893   Thumb Code     2  startup_armcm3.o(.text)
+    MemManage_Handler                        0x00000895   Thumb Code     2  startup_armcm3.o(.text)
+    BusFault_Handler                         0x00000897   Thumb Code     2  startup_armcm3.o(.text)
+    UsageFault_Handler                       0x00000899   Thumb Code     2  startup_armcm3.o(.text)
+    SVC_Handler                              0x0000089b   Thumb Code     2  startup_armcm3.o(.text)
+    DebugMon_Handler                         0x0000089d   Thumb Code     2  startup_armcm3.o(.text)
+    PendSV_Handler                           0x0000089f   Thumb Code     2  startup_armcm3.o(.text)
+    SysTick_Handler                          0x000008a1   Thumb Code     2  startup_armcm3.o(.text)
+    Interrupt0_Handler                       0x000008a3   Thumb Code     2  startup_armcm3.o(.text)
+    Interrupt1_Handler                       0x000008a5   Thumb Code     2  startup_armcm3.o(.text)
+    Interrupt2_Handler                       0x000008a7   Thumb Code     2  startup_armcm3.o(.text)
+    Interrupt3_Handler                       0x000008a9   Thumb Code     2  startup_armcm3.o(.text)
+    Interrupt4_Handler                       0x000008ab   Thumb Code     2  startup_armcm3.o(.text)
+    Interrupt5_Handler                       0x000008ad   Thumb Code     2  startup_armcm3.o(.text)
+    Interrupt6_Handler                       0x000008af   Thumb Code     2  startup_armcm3.o(.text)
+    Interrupt7_Handler                       0x000008b1   Thumb Code     2  startup_armcm3.o(.text)
+    Interrupt8_Handler                       0x000008b3   Thumb Code     2  startup_armcm3.o(.text)
+    Interrupt9_Handler                       0x000008b5   Thumb Code     2  startup_armcm3.o(.text)
+    SystemInit                               0x000008c1   Thumb Code    14  system_armcm3.o(i.SystemInit)
     SystemCoreClock                          0x20000000   Data           4  system_armcm3.o(.data)
     __stack_limit                            0x20000038   Data           0  startup_armcm3.o(STACK)
     __initial_sp                             0x20000438   Data           0  startup_armcm3.o(STACK)
@@ -101,30 +106,30 @@ Image Symbol Table
 
 Memory Map of the image
 
-  Image Entry point : 0x000007f1
+  Image Entry point : 0x00000889
 
-  Load Region LR_1 (Base: 0x00000000, Size: 0x00000880, Max: 0xffffffff, ABSOLUTE)
+  Load Region LR_1 (Base: 0x00000000, Size: 0x00000918, Max: 0xffffffff, ABSOLUTE)
 
-    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000848, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x000008e0, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x00000000   0x00000000   0x000003c0   Data   RO           12    RESET               startup_armcm3.o
-    0x000003c0   0x000003c0   0x000001e4   Code   RO            1  * .text               rk_config_moteur.o
-    0x000005a4   0x000005a4   0x0000024c   Code   RO            6  * .text               rk_priseenmain_moteurs.o
-    0x000007f0   0x000007f0   0x00000038   Code   RO           13  * .text               startup_armcm3.o
-    0x00000828   0x00000828   0x00000020   Code   RO           21    i.SystemInit        system_armcm3.o
+    0x000003c0   0x000003c0   0x00000238   Code   RO            1  * .text               rk_config_moteur.o
+    0x000005f8   0x000005f8   0x00000290   Code   RO            6  * .text               rk_priseenmain_moteurs.o
+    0x00000888   0x00000888   0x00000038   Code   RO           13  * .text               startup_armcm3.o
+    0x000008c0   0x000008c0   0x00000020   Code   RO           21    i.SystemInit        system_armcm3.o
 
 
-    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x00000848, Size: 0x00000038, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x000008e0, Size: 0x00000038, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x00000848   0x00000004   Data   RW           22    .data               system_armcm3.o
-    0x20000004   0x0000084c   0x00000032   Data   RW            7    variable            rk_priseenmain_moteurs.o
+    0x20000000   0x000008e0   0x00000004   Data   RW           22    .data               system_armcm3.o
+    0x20000004   0x000008e4   0x00000032   Data   RW            7    variable            rk_priseenmain_moteurs.o
 
 
-    Execution Region ER_ZI (Exec base: 0x20000038, Load base: 0x00000880, Size: 0x00000400, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_ZI (Exec base: 0x20000038, Load base: 0x00000918, Size: 0x00000400, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -138,13 +143,13 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       484        112          0          0          0        412   rk_config_moteur.o
-       588         70          0         50          0        420   rk_priseenmain_moteurs.o
+       568        114          0          0          0        444   rk_config_moteur.o
+       656         70          0         50          0        444   rk_priseenmain_moteurs.o
         56         10        960          0       1024       1164   startup_armcm3.o
         32         18          0          4          0       5163   system_armcm3.o
 
     ----------------------------------------------------------------------
-      1160        210        960         56       1024       7159   Object Totals
+      1312        212        960         56       1024       7215   Object Totals
          0          0          0          0          0          0   (incl. Generated)
          0          0          0          2          0          0   (incl. Padding)
 
@@ -159,15 +164,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      1160        210        960         56       1024       7159   Grand Totals
-      1160        210        960         56       1024       7159   ELF Image Totals
-      1160        210        960         56          0          0   ROM Totals
+      1312        212        960         56       1024       7215   Grand Totals
+      1312        212        960         56       1024       7215   ELF Image Totals
+      1312        212        960         56          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 2120 (   2.07kB)
+    Total RO  Size (Code + RO Data)                 2272 (   2.22kB)
     Total RW  Size (RW Data + ZI Data)              1080 (   1.05kB)
-    Total ROM Size (Code + RO Data + RW Data)       2176 (   2.13kB)
+    Total ROM Size (Code + RO Data + RW Data)       2328 (   2.27kB)
 
 ==============================================================================
 

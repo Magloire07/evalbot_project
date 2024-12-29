@@ -78,7 +78,12 @@ VITESSE			EQU		0xD1	; Valeures plus petites => Vitesse plus rapide exemple 0x192
 		EXPORT  MOTEUR_GAUCHE_AVANT
 		EXPORT  MOTEUR_GAUCHE_ARRIERE
 		EXPORT  MOTEUR_GAUCHE_INVERSE
-
+			
+	    EXPORT MOTEUR_DROIT_MIN
+        EXPORT MOTEUR_GAUCHE_MIN
+		EXPORT WAIT_MIN
+		EXPORT MOTEUR_DROIT_MAX
+	    EXPORT MOTEUR_GAUCHE_MAX
 
 MOTEUR_INIT	
 		ldr r6, = SYSCTL_RCGC0
@@ -151,7 +156,7 @@ MOTEUR_INIT
 		str r0, [r6]	
 	;Config Compteur, comparateur A et comparateur B
   	;;#define PWM_PERIOD (ROM_SysCtlClockGet() / 16000),
-	;;en mesure : SysCtlClockGet=0F42400h, /16=0x3E8, 
+	;;en mesure : SysCtlClockGet=0F42400h,/16=0x3E8, 
 	;;on divise par 2 car moteur 6v sur alim 12v
 		ldr	r6, =PWM0LOAD ;PWM0LOAD=periode/2 =0x1F4
 		mov r0,	#0x1F4
@@ -326,5 +331,52 @@ MOTEUR_GAUCHE_INVERSE
 		EOR	r0, r1, #GPIO_1
 		str	r0,[r6]
 		BX	LR
+MOTEUR_DROIT_MIN
+    ldr r6, =(GPIODATA_D + (GPIO_1 << 2))
+    mov r0, #2  ; Avance dans la direction du moteur droit
+    str r0, [r6]
 
+    ; Définir la vitesse du moteur droit 
+    ldr r6, =PWM0CMPA
+    mov r0, #0x1B2  ; 40% de la vitesse maximale 
+    str r0, [r6]
+    BX LR
+    
+MOTEUR_GAUCHE_MIN
+    ldr r6, =(GPIODATA_H + (GPIO_1 << 2))
+    mov r0, #0   ; Direction avant
+    str r0, [r6]
+    
+    ldr r6, =PWM1CMPA
+    mov r0, 0x1B2; pareil 40% du max
+    str r0, [r6]                                                                                                     
+    
+    BX LR
+MOTEUR_DROIT_MAX 
+    ldr r6, =(GPIODATA_D + (GPIO_1 << 2))
+    mov r0, #2  ; Avance dans la direction du moteur droit
+    str r0, [r6]
+
+    ; Définir la vitesse du moteur droit 
+    ldr r6, =PWM0CMPA
+    mov r0, #0xD1  ; 
+    str r0, [r6]
+    BX LR
+    
+MOTEUR_GAUCHE_MAX
+    ldr r6, =(GPIODATA_H + (GPIO_1 << 2))
+    mov r0, #0   ; Direction avant
+    str r0, [r6]
+    
+    ldr r6, =PWM1CMPA
+    mov r0, 0xD1; 
+    str r0, [r6]
+    
+    BX LR
+WAIT_MIN
+    mov r1, #100  ; Délai court pour  la réduction de la vitesse
+delay_loop_min
+        subs r1, r1, #1
+        bne delay_loop_min
+    BX LR
 		END

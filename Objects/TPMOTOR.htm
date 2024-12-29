@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\TPMOTOR.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\TPMOTOR.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Dec 20 22:57:40 2024
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sun Dec 29 18:11:02 2024
 <BR><P>
 <H3>Maximum Stack Usage =          0 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -23,6 +23,11 @@ Functions with no stack information
  <LI><a href="#[20]">MOTEUR_GAUCHE_AVANT</a>
  <LI><a href="#[21]">MOTEUR_DROIT_INVERSE</a>
  <LI><a href="#[22]">MOTEUR_GAUCHE_INVERSE</a>
+ <LI><a href="#[23]">MOTEUR_DROIT_MIN</a>
+ <LI><a href="#[24]">MOTEUR_GAUCHE_MIN</a>
+ <LI><a href="#[25]">MOTEUR_DROIT_MAX</a>
+ <LI><a href="#[26]">MOTEUR_GAUCHE_MAX</a>
+ <LI><a href="#[27]">WAIT_MIN</a>
  <LI><a href="#[18]">__main</a>
 </UL>
 </UL>
@@ -120,8 +125,30 @@ Global Symbols
 
 <P><STRONG><a name="[22]"></a>MOTEUR_GAUCHE_INVERSE</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text), UNUSED, KEPT)
 
+<P><STRONG><a name="[23]"></a>MOTEUR_DROIT_MIN</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+</UL>
+
+<P><STRONG><a name="[24]"></a>MOTEUR_GAUCHE_MIN</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+</UL>
+
+<P><STRONG><a name="[25]"></a>MOTEUR_DROIT_MAX</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+</UL>
+
+<P><STRONG><a name="[26]"></a>MOTEUR_GAUCHE_MAX</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+</UL>
+
+<P><STRONG><a name="[27]"></a>WAIT_MIN</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text), UNUSED, KEPT)
+
 <P><STRONG><a name="[18]"></a>__main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_priseenmain_moteurs.o(.text))
-<BR><BR>[Calls]<UL><LI><a href="#[20]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_GAUCHE_AVANT
+<BR><BR>[Calls]<UL><LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_GAUCHE_MAX
+<LI><a href="#[25]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_DROIT_MAX
+<LI><a href="#[24]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_GAUCHE_MIN
+<LI><a href="#[23]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_DROIT_MIN
+<LI><a href="#[20]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_GAUCHE_AVANT
 <LI><a href="#[1f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_GAUCHE_ARRIERE
 <LI><a href="#[1e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_DROIT_AVANT
 <LI><a href="#[1d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_DROIT_ARRIERE

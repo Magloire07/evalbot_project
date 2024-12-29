@@ -79,6 +79,12 @@ DUREE   			EQU     0x80000  ; durée fréquence clignotement multiple
 		IMPORT  MOTEUR_GAUCHE_AVANT			; moteur gauche tourne vers l'avant
 		IMPORT  MOTEUR_GAUCHE_ARRIERE		; moteur gauche tourne vers l'arrière
 		IMPORT  MOTEUR_GAUCHE_INVERSE		; inverse le sens de rotation du moteur gauche
+			
+		IMPORT MOTEUR_DROIT_MIN
+        IMPORT MOTEUR_GAUCHE_MIN
+	    IMPORT WAIT_MIN
+	    IMPORT MOTEUR_DROIT_MAX
+	    IMPORT MOTEUR_GAUCHE_MAX
 ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 __main	
 
@@ -358,14 +364,65 @@ fin
  		 BL	MOTEUR_DROIT_AVANT
 		 BL	MOTEUR_GAUCHE_AVANT
 		 BL WAIT 
-		 BL WAIT 
-		 BL   MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche
-		 BL   MOTEUR_DROIT_OFF			; déactiver le moteur droit
+		 ;BL   MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche
+		 ;BL   MOTEUR_DROIT_OFF			; déactiver le moteur droit
 		 BL Clignotement
 		 BL Clignotement
 		 
-;--------------------------------------------------DECLARATION TABLEAU CONTENANT LE PROGRAMME ------------------------------------------------------------------------------
+;--------------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+INFINI
+
+
+    ; Faire un arc de cercle vers la gauche (virage à gauche)
+    ; Moteur droit à pleine vitesse, moteur gauche réduit
+    BL MOTEUR_DROIT_AVANT
+    BL MOTEUR_GAUCHE_MIN
+    BL WAIT
+    BL WAIT
+    BL WAIT
+    BL WAIT
+
+    ; Effectuer un virage vers la droite pour revenir à la ligne droite
+    ; Moteur gauche à pleine vitesse, moteur droit réduit
+
+
+
+
+	
+	BL MOTEUR_DROIT_MAX
+	BL MOTEUR_GAUCHE_MAX
+    BL WAIT
+
+
+    ; Répéter l'arc de cercle vers la gauche (virage à gauche)
+    BL MOTEUR_GAUCHE_AVANT
+    BL MOTEUR_DROIT_MIN
+    BL WAIT
+	BL WAIT
+    BL WAIT
+
+    ; Répéter le virage vers la droite
+
+
+	BL MOTEUR_DROIT_MAX
+	BL MOTEUR_GAUCHE_MAX
+    BL MOTEUR_DROIT_AVANT
+    BL MOTEUR_GAUCHE_AVANT
+
+    BL WAIT
+                                                                                               
+	BL   MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche
+	BL   MOTEUR_DROIT_OFF			; déactiver le moteur droit
+
+    ; Fin de INFINI
+
+END
+;--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+;--------------------------------------------------DECLARATION TABLEAU CONTENANT LE PROGRAMME ------------------------------------------------------------------------------
 
 		NOP
 		
