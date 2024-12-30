@@ -388,9 +388,14 @@
               <FilePath>.\RK_Config_Moteur.s</FilePath>
             </File>
             <File>
-              <FileName>RK_PriseEnMain_Moteurs.s</FileName>
+              <FileName>labytatonnement.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\RK_PriseEnMain_Moteurs.s</FilePath>
+              <FilePath>.\labytatonnement.s</FilePath>
+            </File>
+            <File>
+              <FileName>Main.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\Main.s</FilePath>
             </File>
           </Files>
         </Group>
