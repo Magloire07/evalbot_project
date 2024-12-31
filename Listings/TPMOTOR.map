@@ -81,7 +81,7 @@ Image Symbol Table
     MOTEUR_DROIT_MAX                         0x00000559   Thumb Code     0  rk_config_moteur.o(.text)
     MOTEUR_GAUCHE_MAX                        0x0000056b   Thumb Code     0  rk_config_moteur.o(.text)
     WAIT_MIN                                 0x0000057d   Thumb Code     0  rk_config_moteur.o(.text)
-    PARCOURS_LABYRINTHE2                     0x000005fd   Thumb Code     0  labytatonnement.o(.text)
+    PARCOURS_LABYRINTHE2                     0x000005f9   Thumb Code     0  labytatonnement.o(.text)
     __main                                   0x000006f9   Thumb Code     0  main.o(.text)
     DEMARRAGE                                0x000007b3   Thumb Code     0  main.o(.text)
     clignoteAuClic                           0x0000082f   Thumb Code     0  main.o(.text)

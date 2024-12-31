@@ -45,11 +45,9 @@ BROCHE1				EQU 	0x2			; bumper_L
 		  
 
 ;---------------------------------------------------PARCOURS DU LABYRINTHE 2-------------------------------------------------------------	 
-		mov R5,#0  ; compteur d'indice du tableau
-		;mov R0,#7  ; temoin de fin de parcours, (on comparera R5 et 7pour savoir si le labyrinthe est terminé )
-
 PARCOURS_LABYRINTHE2
-		
+		 mov R5,#0  ; compteur d'indice du tableau
+
 ;------------------------------------------------CLIC SUR SWITCH1 POUR COMMENCER----------------------------------------------------------------
 readstate2
 		 ldr r7, = GPIO_PORTD_BASE + (BROCHE_6<<2)
@@ -69,7 +67,7 @@ avancer
 
 testCollisionfrontale
 		
-		CMP R5,#7
+		CMP R5,#6 				; temoin de fin de parcours, (on comparera R5 et 7pour savoir si le labyrinthe est terminé )
 		BEQ  fintatonnement     ;; si la condition est vrai on arrête les moteurs, passe dans le fichier Main.s pour parcourir le labyrinthe cette fois avec le code obtenu par tatonnement  
 		
 		ldr r7, = GPIO_PORTE_BASE + (BROCHE0<<2) 
@@ -78,8 +76,8 @@ testCollisionfrontale
         ldr r10,[r8]        ; lecture de l'état du bp_0
 		ldr r4,[r7] 		 ; lecture de l'état du bp_1
 		
-		CMP r10,#0x00
-		BNE  testBp_1
+		CMP r10,#0x00      ; bumper0
+		BNE  testBp_1      ; bumper1
 obstaclefrontale
 		BL   MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche
 		BL   MOTEUR_DROIT_OFF			; déactiver le moteur droit
@@ -93,7 +91,7 @@ testBp_1
 ;----------------------------------TOURNE A DROITE --------------------------------------------------------------------------------------
 tourneADroite
 		 ;on suppose que c'est vers la droite 
-		 mov   r11,#2			 ; 2 pour  droite 
+		 mov    r11,#2			; 2 pour  droite (c'est par defaut, au cas ou il y a abstacle plus tôt , on change en 1 c'est pourquoi le compteur d'indice n'est incrémenté qu'à la fin
          STRB    R11, [R9, R5]  ; écrire dans le tableau à l'indice indiqué par R5
 		 
 		 BL	MOTEUR_DROIT_ON
@@ -116,7 +114,7 @@ testCollisiondemie
 		ldr r8, = GPIO_PORTE_BASE + (BROCHE1<<2)
 parcours2
 		sub r1,#1
-		CMP r1,#0x00        ; si la condition est vraie alors c'est un parcours normale avec obstacle frontale donc on incremenle compteur d'indice puis on contine la deuxiemme moitié du parcours 
+		CMP r1,#0x00        ; si la condition est vraie alors c'est un parcours normale avec obstacle frontale donc on incremenle compteur d'indice puis on clignote, continue la deuxiemme moitié du parcours 
 		BEQ incrementer
 		
         ldr r10,[r8]        ; lecture de l'état du bp_0
@@ -134,7 +132,7 @@ obstacleAdroite
 		MOV    r11,#1			 ; 1 pour  gauche 
         STRB   R11, [R9, R5]  ; écrire dans le tableau à l'indice indiqué par R5
 	    ADD    R5,#1          ; incrémentation du compteur 		B    tourneADroite  
-
+		 
 		; on tourne alors de 180° qui correspond à tourner à tourner  dans le sens inverse 
 		BL	MOTEUR_GAUCHE_ON
 		BL	MOTEUR_GAUCHE_ARRIERE
@@ -151,8 +149,8 @@ testBp12
 		B obstacleAdroite
 incrementer
 		 ADD     R5,#1  
-		 BL clignoteAuClic
-		 B testCollisionfrontale
+		 BL   Clignotement               ; on clignote pour signaler que c'est un parcours long  
+		 B testCollisionfrontale         ; continue le deuxieme moitié du parcours 
 fintatonnement
 		 BL  WAIT
 		 BL  MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche
@@ -160,5 +158,5 @@ fintatonnement
 		 BL  Clignotement               ; on clignote à chaque collision
 		 BL  Clignotement               ; on clignote à chaque collision
 
-		 B DEMARRAGE                    
+		 B DEMARRAGE                    ; on retourne dans main pour utilisé la logique le parcours en lisant dans buffer car c'est le même buffer dans R9 qui est utilisé     
 		 END

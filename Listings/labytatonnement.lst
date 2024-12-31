@@ -90,12 +90,12 @@ ARM Macro Assembler    Page 2
    47 00000000         ;---------------------------------------------------PARC
                        OURS DU LABYRINTHE 2------------------------------------
                        -------------------------  
-   48 00000000 F04F 0500       mov              R5,#0       ; compteur d'indice
-                                                             du tableau
-   49 00000004         ;mov R0,#7  ; temoin de fin de parcours, (on comparera R
+   48 00000000         ;mov R0,#7  ; temoin de fin de parcours, (on comparera R
                        5 et 7pour savoir si le labyrinthe est termin√© )
-   50 00000004         
-   51 00000004         PARCOURS_LABYRINTHE2
+   49 00000000         
+   50 00000000         PARCOURS_LABYRINTHE2
+   51 00000000 F04F 0500       mov              R5,#0       ; compteur d'indice
+                                                             du tableau
    52 00000004         
    53 00000004         ;------------------------------------------------CLIC SU
                        R SWITCH1 POUR COMMENCER--------------------------------
@@ -121,7 +121,7 @@ _6<<2)
    69 00000028         
    70 00000028         testCollisionfrontale
    71 00000028         
-   72 00000028 2D07            CMP              R5,#7
+   72 00000028 2D06            CMP              R5,#6
    73 0000002A D054            BEQ              fintatonnement ;; si la conditi
                                                             on est vrai on arr√
                                                             ™te les moteurs, pa
@@ -278,7 +278,10 @@ ARM Macro Assembler    Page 5
   151 000000CA E7E5            B                obstacleAdroite
   152 000000CC         incrementer
   153 000000CC F105 0501       ADD              R5,#1
-  154 000000D0 F7FF FFFE       BL               clignoteAuClic
+  154 000000D0 F7FF FFFE       BL               Clignotement ; on clignote pour
+                                                             signaler que c'est
+                                                             un parcours long  
+                                                            
   155 000000D4 E7A8            B                testCollisionfrontale
   156 000000D6         fintatonnement
   157 000000D6 F7FF FFFE       BL               WAIT
@@ -318,11 +321,11 @@ Symbol: .text
    Uses
       None
 Comment: .text unused
-PARCOURS_LABYRINTHE2 00000004
+PARCOURS_LABYRINTHE2 00000000
 
 Symbol: PARCOURS_LABYRINTHE2
    Definitions
-      At line 51 in file labytatonnement.s
+      At line 50 in file labytatonnement.s
    Uses
       At line 23 in file labytatonnement.s
 Comment: PARCOURS_LABYRINTHE2 used once
@@ -496,6 +499,7 @@ Symbol: Clignotement
    Uses
       At line 86 in file labytatonnement.s
       At line 131 in file labytatonnement.s
+      At line 154 in file labytatonnement.s
       At line 160 in file labytatonnement.s
       At line 161 in file labytatonnement.s
 
@@ -546,13 +550,13 @@ Symbol: MOTEUR_DROIT_OFF
 MOTEUR_DROIT_ON 00000000
 
 Symbol: MOTEUR_DROIT_ON
-   Definitions
 
 
 
 ARM Macro Assembler    Page 2 Alphabetic symbol ordering
 External symbols
 
+   Definitions
       At line 26 in file labytatonnement.s
    Uses
       At line 62 in file labytatonnement.s
@@ -611,13 +615,13 @@ Symbol: WAIT
    Definitions
       At line 40 in file labytatonnement.s
    Uses
-      At line 60 in file labytatonnement.s
 
 
 
 ARM Macro Assembler    Page 3 Alphabetic symbol ordering
 External symbols
 
+      At line 60 in file labytatonnement.s
       At line 101 in file labytatonnement.s
       At line 141 in file labytatonnement.s
       At line 142 in file labytatonnement.s
@@ -630,7 +634,6 @@ Symbol: clignoteAuClic
       At line 42 in file labytatonnement.s
    Uses
       At line 59 in file labytatonnement.s
-      At line 154 in file labytatonnement.s
-
+Comment: clignoteAuClic used once
 14 symbols
 370 symbols in table
