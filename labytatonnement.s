@@ -88,17 +88,21 @@ testBp_1
 		CMP r4,#0x00
 		BNE testCollisionfrontale 
 		B obstaclefrontale
-;----------------------------------TOURNE A DROITE --------------------------------------------------------------------------------------
+;----------------------------------ECRITURE DE DIRECTION DROITE PAR DEFAUT --------------------------------------------------------------------------------------
 tourneADroite
 		 ;on suppose que c'est vers la droite 
 		 mov    r11,#2			; 2 pour  droite (c'est par defaut, au cas ou il y a abstacle plus tôt , on change en 1 c'est pourquoi le compteur d'indice n'est incrémenté qu'à la fin
          STRB    R11, [R9, R5]  ; écrire dans le tableau à l'indice indiqué par R5
-		 
+
+;----------------------------------TOURNE A DROITE  --------------------------------------------------------------------------------------
+
 		 BL	MOTEUR_DROIT_ON
 		 BL	MOTEUR_DROIT_ARRIERE
 		 BL WAIT                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
 		 BL  MOTEUR_DROIT_OFF			; déactiver le moteur droit
 		 
+;-----------------------------------------AVANCER------------------------------------------------------------------------------------------------------------------------
+
 		 BL MOTEUR_DROIT_ON
 		 BL MOTEUR_GAUCHE_ON
 		 BL MOTEUR_DROIT_AVANT
@@ -109,7 +113,7 @@ tourneADroite
 ;----------------------------------TEST DE COLLISION  DURANT PARCOURS2 -------------------------------------------------------------------------------------
 
 testCollisiondemie
-		ldr r1, =0xFFFFF	      ; R1 correspond à 1/3 de la duree de parcours entre deux obstacle frontale, à ajuster
+		ldr r1, =0x1FFFF0	      ; R1 correspond à 1/3 de la duree de parcours entre deux obstacle frontale, à ajuster
 		ldr r7, = GPIO_PORTE_BASE + (BROCHE0<<2) 
 		ldr r8, = GPIO_PORTE_BASE + (BROCHE1<<2)
 parcours2
@@ -127,19 +131,23 @@ obstacleAdroite
 		BL   MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche
 		BL   MOTEUR_DROIT_OFF			; déactiver le moteur droit
 		BL   Clignotement               ; on clignote à chaque collision 
-		
+
+;----------------------------------ECRITURE DE DIRECTION GAUCHE --------------------------------------------------------------------------------------
+
 		;on écrit la  direction gauche 
 		MOV    r11,#1			 ; 1 pour  gauche 
         STRB   R11, [R9, R5]  ; écrire dans le tableau à l'indice indiqué par R5
 	    ADD    R5,#1          ; incrémentation du compteur 		B    tourneADroite  
 		 
+		 
+;----------------------------------TOURNE A  GAUCHE DEUX FOIS --------------------------------------------------------------------------------------
 		; on tourne alors de 180° qui correspond à tourner à tourner  dans le sens inverse 
 		BL	MOTEUR_GAUCHE_ON
 		BL	MOTEUR_GAUCHE_ARRIERE
 		BL  WAIT                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
 		BL  WAIT                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
 		BL  MOTEUR_GAUCHE_OFF			; déactiver le moteur droit
-		
+;-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		; on et avance normalement 
 		B   avancer 		
 
