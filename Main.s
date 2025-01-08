@@ -48,7 +48,7 @@ BROCHE_6			EQU		0x40		; switch1
 BROCHE_7			EQU		0x80		; switch2 
 BROCHE6_7			EQU		0xC0		; sw1 et sw2
 
-DUREE   			EQU     0x80000  ; durée fréquence clignotement multiple  
+DUREE   			EQU     0x60000  ; durée fréquence clignotement multiple  
 ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 	    ;; registres utilisés 
 		;;---------------------------------------------
@@ -73,7 +73,8 @@ DUREE   			EQU     0x80000  ; durée fréquence clignotement multiple
 		EXPORT  BROCHE1
 		EXPORT  WAIT
 		EXPORT  clignoteAuClic
-
+		EXPORT  WAITREC
+		EXPORT  WAIT45
 		;; The IMPORT command specifies that a symbol is defined in a shared object at runtime.
 		IMPORT	MOTEUR_INIT					; initialise les moteurs (configure les pwms + GPIO)
 		
@@ -293,7 +294,7 @@ wait21  subs r1, #1
 ;------------------------------------------------------------------------------------------------------------------------
 ; logique de clignotement multiple   avant et apprès le programmation 
 Clignotement 
-		ldr r4, =0x8                           ; durée de clignotement
+		ldr r4, =0x3                           ; durée de clignotement 3 * 2 * DUREE
 		mov r3, #BROCHE4_5		
 		ldr r6, = GPIO_PORTF_BASE + (BROCHE4_5<<2)
         str r3, [r6]  							;; Allume LED1&2 portF broche 4&5 : 00110000 (contenu de r3)
@@ -315,11 +316,23 @@ wait2   subs r1, #1
 		
         str r2, [r6]    						;; Eteint LED car r2 = 0x00      
         BX  LR
-;------------------------------------------------------------------------------------------------------------------------
+;---------------------------------------------- WAIT --------------------------------------------------------------------------
 ;; Boucle d'attente   simple  sans rien faire 
 WAIT	ldr r1, =0xA00000 
 wait3	subs r1, #1
         bne wait3
+		BX	LR
+		
+;; Boucle pour faire 45°
+WAIT45	ldr r1, =0x500000 
+wait45	subs r1, #1
+        bne wait45
+		BX	LR
+		
+;; attende pour reculer 
+WAITREC	ldr r1, =0x200000
+waitrec	subs r1, #1
+        bne waitrec
 		BX	LR
 ;----------------------------------TEST DE COLLISION --------------------------------------------------------------------------------------
 
@@ -356,19 +369,34 @@ lectureMemoire
 		
 ;----------------------------------TOURNE A DROITE OU GAUCHE  --------------------------------------------------------------------------------------
 tourneADroite
-		 BL	MOTEUR_DROIT_ON
+		 BL MOTEUR_DROIT_ON
+		 BL MOTEUR_GAUCHE_ON
+	     BL MOTEUR_DROIT_ARRIERE
+		 BL MOTEUR_GAUCHE_ARRIERE
+		 BL WAITREC
+		 
 		 BL	MOTEUR_DROIT_ARRIERE
-		 BL WAIT                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
-		 BL  MOTEUR_DROIT_OFF			; déactiver le moteur droit
+	     BL MOTEUR_GAUCHE_AVANT
+		 BL WAIT45                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
+		 BL MOTEUR_DROIT_OFF			; déactiver le moteur droit
+		 BL MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche
+		 
 		 ADD R11,#1						; incrémentation pour la prochaine direction 
 		 CMP R11,R5				   ; on vérifie si tout le programme a été lu 
 		 BEQ fin                   ; c'est la fin si oui 
 		 B   parcours              ; on continue le parcours si non 
 tourneAGauche
-		 BL	MOTEUR_GAUCHE_ON
+		 BL MOTEUR_DROIT_ON
+		 BL MOTEUR_GAUCHE_ON
+	     BL MOTEUR_GAUCHE_ARRIERE
+		 BL MOTEUR_DROIT_ARRIERE
+		 BL WAITREC
+		 
 		 BL	MOTEUR_GAUCHE_ARRIERE
-		 BL WAIT                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
-		 BL  MOTEUR_GAUCHE_OFF			; déactiver le moteur droit
+	     BL MOTEUR_DROIT_AVANT
+		 BL WAIT45                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
+		 BL MOTEUR_DROIT_OFF			; déactiver le moteur droit
+		 BL MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche 
 		 ADD R11,#1						; incrémentation pour la prochaine direction 
 		 CMP R11,R5				   ; on vérifie si tout le programme a été lu 
 		 BEQ fin                   ; c'est la fin si oui 

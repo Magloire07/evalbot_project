@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\TPMOTOR.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\TPMOTOR.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Jan 03 13:45:41 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Wed Jan 08 19:05:57 2025
 <BR><P>
 <H3>Maximum Stack Usage =          0 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -34,12 +34,14 @@ Functions with no stack information
  <LI><a href="#[2a]">clignoteAuClic</a>
  <LI><a href="#[2b]">Clignotement</a>
  <LI><a href="#[2c]">WAIT</a>
+ <LI><a href="#[2d]">WAIT45</a>
+ <LI><a href="#[2e]">WAITREC</a>
 </UL>
 </UL>
 <P>
 <H3>
 Mutually Recursive functions
-</H3> <LI><a href="#[2c]">WAIT</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[2c]">WAIT</a><BR>
+</H3> <LI><a href="#[2e]">WAITREC</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[2e]">WAITREC</a><BR>
  <LI><a href="#[29]">DEMARRAGE</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[29]">DEMARRAGE</a><BR>
  <LI><a href="#[1]">NMI_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[1]">NMI_Handler</a><BR>
  <LI><a href="#[2]">HardFault_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[2]">HardFault_Handler</a><BR>
@@ -97,45 +99,45 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1a]"></a>MOTEUR_DROIT_ON</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 <LI><a href="#[29]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DEMARRAGE
 <LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
 </UL>
 
 <P><STRONG><a name="[1b]"></a>MOTEUR_DROIT_OFF</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 <LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
 </UL>
 
 <P><STRONG><a name="[1c]"></a>MOTEUR_GAUCHE_ON</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 <LI><a href="#[29]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DEMARRAGE
 <LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
 </UL>
 
 <P><STRONG><a name="[1d]"></a>MOTEUR_GAUCHE_OFF</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 <LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
 </UL>
 
 <P><STRONG><a name="[1e]"></a>MOTEUR_DROIT_ARRIERE</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 <LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
 </UL>
 
 <P><STRONG><a name="[1f]"></a>MOTEUR_DROIT_AVANT</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 <LI><a href="#[29]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DEMARRAGE
 <LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
 </UL>
 
 <P><STRONG><a name="[20]"></a>MOTEUR_GAUCHE_ARRIERE</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 <LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
 </UL>
 
 <P><STRONG><a name="[21]"></a>MOTEUR_GAUCHE_AVANT</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 <LI><a href="#[29]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DEMARRAGE
 <LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
 </UL>
@@ -145,25 +147,27 @@ Global Symbols
 <P><STRONG><a name="[23]"></a>MOTEUR_GAUCHE_INVERSE</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text), UNUSED, KEPT)
 
 <P><STRONG><a name="[24]"></a>MOTEUR_DROIT_MIN</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 </UL>
 
 <P><STRONG><a name="[25]"></a>MOTEUR_GAUCHE_MIN</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 </UL>
 
 <P><STRONG><a name="[26]"></a>MOTEUR_DROIT_MAX</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 </UL>
 
 <P><STRONG><a name="[27]"></a>MOTEUR_GAUCHE_MAX</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 </UL>
 
 <P><STRONG><a name="[28]"></a>WAIT_MIN</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text), UNUSED, KEPT)
 
 <P><STRONG><a name="[18]"></a>PARCOURS_LABYRINTHE2</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, labytatonnement.o(.text))
 <BR><BR>[Calls]<UL><LI><a href="#[2a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;clignoteAuClic
+<LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
+<LI><a href="#[2d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT45
 <LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
 <LI><a href="#[29]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DEMARRAGE
 <LI><a href="#[2b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Clignotement
@@ -176,7 +180,7 @@ Global Symbols
 <LI><a href="#[1b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_DROIT_OFF
 <LI><a href="#[1a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_DROIT_ON
 </UL>
-<BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 </UL>
 
 <P><STRONG><a name="[19]"></a>__main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, main.o(.text))
@@ -206,12 +210,25 @@ Global Symbols
 
 <P><STRONG><a name="[2b]"></a>Clignotement</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, main.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[19]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
-<LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 <LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
 </UL>
 
 <P><STRONG><a name="[2c]"></a>WAIT</STRONG> (Thumb, 4 bytes, Stack size unknown bytes, main.o(.text))
-<BR><BR>[Calls]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
+<LI><a href="#[29]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DEMARRAGE
+<LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
+</UL>
+
+<P><STRONG><a name="[2d]"></a>WAIT45</STRONG> (Thumb, 4 bytes, Stack size unknown bytes, main.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
+<LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
+</UL>
+
+<P><STRONG><a name="[2e]"></a>WAITREC</STRONG> (Thumb, 4 bytes, Stack size unknown bytes, main.o(.text))
+<BR><BR>[Calls]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
+<LI><a href="#[2d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT45
+<LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
 <LI><a href="#[2b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Clignotement
 <LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
 <LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_GAUCHE_MAX
@@ -227,8 +244,7 @@ Global Symbols
 <LI><a href="#[1b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_DROIT_OFF
 <LI><a href="#[1a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_DROIT_ON
 </UL>
-<BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT
-<LI><a href="#[29]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DEMARRAGE
+<BR>[Called By]<UL><LI><a href="#[2e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAITREC
 <LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PARCOURS_LABYRINTHE2
 </UL>
 

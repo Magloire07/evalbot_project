@@ -40,6 +40,8 @@ BROCHE1				EQU 	0x2			; bumper_L
 	    IMPORT WAIT
 		IMPORT Clignotement
 		IMPORT clignoteAuClic
+	    IMPORT WAITREC
+		IMPORT WAIT45
 
 			
 		  
@@ -95,12 +97,18 @@ tourneADroite
          STRB    R11, [R9, R5]  ; écrire dans le tableau à l'indice indiqué par R5
 
 ;----------------------------------TOURNE A DROITE  --------------------------------------------------------------------------------------
-
-		 BL	MOTEUR_DROIT_ON
-		 BL	MOTEUR_DROIT_ARRIERE
-		 BL WAIT                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
-		 BL  MOTEUR_DROIT_OFF			; déactiver le moteur droit
+		 BL MOTEUR_DROIT_ON
+		 BL MOTEUR_GAUCHE_ON
+	     BL MOTEUR_DROIT_ARRIERE
+		 BL MOTEUR_GAUCHE_ARRIERE
+		 BL WAITREC
 		 
+		 BL	MOTEUR_DROIT_ARRIERE
+	     BL MOTEUR_GAUCHE_AVANT
+		 BL WAIT45                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
+		 BL MOTEUR_DROIT_OFF			; déactiver le moteur droit
+		 BL MOTEUR_GAUCHE_OFF			; déactiver le moteur gauche
+
 ;-----------------------------------------AVANCER------------------------------------------------------------------------------------------------------------------------
 
 		 BL MOTEUR_DROIT_ON
@@ -113,7 +121,7 @@ tourneADroite
 ;----------------------------------TEST DE COLLISION  DURANT PARCOURS2 -------------------------------------------------------------------------------------
 
 testCollisiondemie
-		ldr r1, =0x1FFFF0	      ; R1 correspond à 1/3 de la duree de parcours entre deux obstacle frontale, à ajuster
+		ldr r1, =0x1F0000	      ; R1 correspond à 1/3 de la duree de parcours entre deux obstacle frontale, à ajuster
 		ldr r7, = GPIO_PORTE_BASE + (BROCHE0<<2) 
 		ldr r8, = GPIO_PORTE_BASE + (BROCHE1<<2)
 parcours2
@@ -142,13 +150,20 @@ obstacleAdroite
 		 
 ;----------------------------------TOURNE A  GAUCHE DEUX FOIS --------------------------------------------------------------------------------------
 		; on tourne alors de 180° qui correspond à tourner à tourner  dans le sens inverse 
-		BL	MOTEUR_GAUCHE_ON
+		BL MOTEUR_DROIT_ON
+		BL MOTEUR_GAUCHE_ON
+	    BL MOTEUR_DROIT_ARRIERE
+		BL MOTEUR_GAUCHE_ARRIERE
+		BL  WAITREC
+		
 		BL	MOTEUR_GAUCHE_ARRIERE
-		BL  WAIT                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
-		BL  WAIT                   ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
+	    BL  MOTEUR_DROIT_AVANT
+		BL  WAIT                  ; le WAIT et la vitesse sont réglés pour produire un angle de 90° 
 		BL  MOTEUR_GAUCHE_OFF			; déactiver le moteur droit
+		BL  MOTEUR_DROIT_OFF
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-		; on et avance normalement 
+		; on  avance normalement 
 		B   avancer 		
 
 testBp12                        
