@@ -9,4 +9,4 @@
 -------------------------------------------------------------
    RK - Evalbot (Cortex M3 de Texas Instrument)
  programme - Pilotage  Evalbot pour parcouris un labyrinthe
- et parcours autonome 
+ et parcourir autonome 
