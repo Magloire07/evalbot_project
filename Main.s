@@ -14,11 +14,11 @@
 ; This register controls the clock gating logic in normal Run mode
 SYSCTL_PERIPH_GPIO EQU		0x400FE108		; SYSCTL_RCGC2_R (p291 datasheet de lm3s9b92.pdf)
 
-GPIO_PORTF_BASE		EQU		0x40025000		; GPIO Port F (APB) base: 0x4002.5000 
+GPIO_PORTF_BASE		EQU		0x40025000		; adresse de base  Port F (LEDs)(base: 0x4002.5000)
 
-GPIO_PORTE_BASE		EQU		0x40024000		; GPIO Port E (APB) base: 0x4002.4000
+GPIO_PORTE_BASE		EQU		0x40024000		; GPIO Port E  (Bumpers) base: 0x4002.4000
 	
-GPIO_PORTD_BASE		EQU		0x40007000		; GPIO Port D (APB) base: 0x4000.7000
+GPIO_PORTD_BASE		EQU		0x40007000		; GPIO Port D (Switchs) base: 0x4000.7000
 
 ; configure the corresponding pin to be an output
 GPIO_O_DIR   		EQU 	0x00000400  ; GPIO Direction (p417 datasheet de lm3s9B92.pdf)
@@ -62,6 +62,12 @@ DUREE   			EQU     0x60000  ; durée fréquence clignotement multiple
 		;;---------------------------------------
 		;; r3,r2,r6 pour lire les pins de leds et allumer puis éteindre
 		;; r7,r8,r10 pour lire les pins des switchs et bumpers 
+		;;
+		;; r9 pour contenir l'adresse de tableau des instructions
+		;; r2 contient la valeur immediate 0 pour eteindre les leds
+		;; r5 compteur des indices pour parcourir la mémoire(tableau)
+		;; r11 contient les codes de direction (1 pour gauche 2 pour droite)
+		;; r12 compteur pour savoir si les 3 scénarios sont terminés 
 ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 		ENTRY
 		EXPORT	__main		
@@ -109,10 +115,11 @@ __main
 		mov R12,#0             ; compteur du nombre de parcours de labyrinthe, si elle vaut deux alors c'est la toute fin , on dessine infini
 
 
-		ldr r6, =SYSCTL_PERIPH_GPIO  			;; RCGC2
-        mov r0, #0x00000038  					;; Enable clock sur GPIO E , F  et D où sont branchés les leds (0x28 == 0b111000)
-		str r0, [r6]
+		ldr r6, =SYSCTL_PERIPH_GPIO  			;; RCGC2 l'adresse pour activer l'horloge
+        mov r0, #0x00000038  					;;  Horloge sur les port E , F  et D où sont branchés bumpers, les leds et les switchs(0x38 == 0b111000)
+		str r0, [r6]							;;  Activation de l'horloge pour les ports
 		;; "There must be a delay of 3 system clocks before any GPIO reg. access  (p413 datasheet de lm3s9B92.pdf)
+		;; 3 coup d'horloge  pour que l'activation soit affective 
 		nop	   									;; tres tres important....
 		nop	   
 		nop	   									;; pas necessaire en simu ou en debbug step by step...
@@ -120,11 +127,11 @@ __main
 		
 ;--------------------------------------------------CONFIGURATION LED 4_5----------------------------------------------------------------------		 		
 
-        ldr r6, = GPIO_PORTF_BASE+GPIO_O_DIR    ;; 1 Pin du portF en sortie (broche 4 : 00010000)
+        ldr r6, = GPIO_PORTF_BASE+GPIO_O_DIR    ;; configuration des led periphérque de sortie (broche 4 et 5 : 00110000)
         ldr r0, = BROCHE4_5 	
         str r0, [r6]
 		
-		ldr r6, = GPIO_PORTF_BASE+GPIO_O_DEN	;; Enable Digital Function 
+		ldr r6, = GPIO_PORTF_BASE+GPIO_O_DEN	;; Enable Digital Function (activation de la conversion  numerique analogique)
         ldr r0, = BROCHE4_5		
         str r0, [r6]
 		
@@ -132,11 +139,11 @@ __main
         ldr r0, = BROCHE4_5			
         str r0, [r6]		
 ;-------------------------------------------------------CONFIGURATION Bumper0_1-----------------------------------------------------------------
-		ldr r6, = GPIO_PORTE_BASE+GPIO_I_PUR	;; Pul_up 
+		ldr r6, = GPIO_PORTE_BASE+GPIO_I_PUR	;; Pul_up (activation de la resistance )
         ldr r0, = BROCHE0_1		
         str r0, [r6]
 		
-		ldr r6, = GPIO_PORTE_BASE+GPIO_O_DEN ; Enable Digital Function 
+		ldr r6, = GPIO_PORTE_BASE+GPIO_O_DEN ; Enable Digital Function (activation de la conversion  numerique analogique)
         ldr r0, = BROCHE0_1	
         str r0, [r6] 		
 ;-------------------------------------------------------CONFIGURATION Switch6_7-----------------------------------------------------------------
